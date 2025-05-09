@@ -1,0 +1,34 @@
+
+#### Save in Local Storage
+1. **Create a New Repository in GitHub**
+    - Go to GitHub and create a new repository.
+
+2. **Open Terminal (or Git Bash) and Navigate to Your Project**
+    - Use the `cd` command to navigate to your project folder.
+
+3. **Run the Following Commands**
+    ```bash
+    git init
+    git remote add origin https://github.com/USERNAME/REPO_NAME.git
+    git add .
+    git commit -m "Initial commit"
+    git branch -M main
+    git push -u origin main
+    ```
+
+---
+
+#### Clone the Repository on Another Device
+1. **Open GitHub and Get the Repository URL**
+    - Copy the HTTPS URL (e.g., `https://github.com/USERNAME/REPO_NAME.git`).
+
+2. **Open Terminal (or Git Bash) on the Other Device**
+    - Navigate to the folder where you want to clone the project:
+      ```bash
+      cd path/to/your/desired-folder
+      ```
+
+3. **Clone the Repository**
+    ```bash
+    git clone https://github.com/USERNAME/REPO_NAME.git
+    ```
