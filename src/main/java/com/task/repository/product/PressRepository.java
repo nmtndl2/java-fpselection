@@ -1,0 +1,22 @@
+package com.task.repository.product;
+
+import com.task.entities.product.Press;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface PressRepository extends JpaRepository<Press, Long> {
+    boolean existsByPressSize(String pressSize);
+
+//    @Query("SELECT p.volume FROM Press p WHERE p.pressSize = :pressSize AND p.plateType = :plateType")
+//    Integer findVolumeByPressSizeAndPlateType(@Param("pressSize") String pressSize, @Param("plateType") String plateType);
+
+    @Query("SELECT DISTINCT p.pressSize FROM Press p")
+    List<String> findAllPressSizes();
+    Press findByPressSize(String pressSize);
+}
