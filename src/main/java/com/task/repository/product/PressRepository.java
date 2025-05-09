@@ -13,10 +13,8 @@ import java.util.Optional;
 public interface PressRepository extends JpaRepository<Press, Long> {
     boolean existsByPressSize(String pressSize);
 
-//    @Query("SELECT p.volume FROM Press p WHERE p.pressSize = :pressSize AND p.plateType = :plateType")
-//    Integer findVolumeByPressSizeAndPlateType(@Param("pressSize") String pressSize, @Param("plateType") String plateType);
+//    @Query("SELECT DISTINCT p.pressSize FROM Press p")
+//    List<String> findAllPressSizes();
 
-    @Query("SELECT DISTINCT p.pressSize FROM Press p")
-    List<String> findAllPressSizes();
     Press findByPressSize(String pressSize);
 }

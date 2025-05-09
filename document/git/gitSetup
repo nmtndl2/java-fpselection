@@ -32,3 +32,83 @@
     ```bash
     git clone https://github.com/USERNAME/REPO_NAME.git
     ```
+
+
+
+
+
+    #!/bin/bash
+
+    # Step 1: Initialize Git and Connect to GitHub
+    git init  # Initialize a Git repository (only needed for a new project)
+    git remote add origin <repository_url>  # Link local repo to GitHub
+    git pull origin main  # Ensure you have the latest main branch
+
+    # Step 2: Create and Switch to a New Branch
+    git checkout -b feature-branch  # Create and switch to a new branch
+
+    # Step 3: Work on Changes & Commit
+    git status  # Check file status
+    git add .  # Add all modified files
+    git commit -m "Implemented new feature"  # Commit changes
+
+    # Step 4: Pull Latest Changes from Main (To Avoid Conflicts)
+    git checkout main  # Switch to main branch
+    git pull origin main  # Get the latest changes from GitHub
+    git checkout feature-branch  # Switch back to feature branch
+    git merge main  # Merge latest main changes into the feature branch
+
+    # Step 5: Push Feature Branch to GitHub
+    git push origin feature-branch  # Push the new branch to GitHub
+
+    # Step 6: Create a Pull Request (PR) in GitHub
+
+    # Step 7: Merge Feature Branch into Main
+    git checkout main  # Switch to main branch
+    git merge feature-branch  # Merge feature branch into main
+
+    # Step 8: Push Updated Main Branch to GitHub
+    git push origin main  # Push main branch with merged changes
+
+    # Step 9: Clean Up Feature Branch (Optional but Recommended)
+    git branch -d feature-branch  # Delete branch locally
+    git push origin --delete feature-branch  # Delete branch from GitHub
+
+    # Step 10: Verify and Continue Development
+    git branch  # Check available branches
+    git checkout -b new-feature-branch  # Start another feature branch
+
+    # Undo unstaged changes
+    git checkout -- <file_name>
+
+    # Undo staged changes
+    git reset HEAD <file_name>
+
+    # Undo last commit but keep changes
+    git reset --soft HEAD~1
+
+    # Undo last commit and discard changes
+    git reset --hard HEAD~1
+
+    # Revert a specific commit
+    git revert <commit_id>
+
+    # Undo pushed commits (use caution)
+    git reset --hard HEAD~1
+    git push origin --force
+
+    # Safely undo pushed commit
+    git revert <commit_id>
+    git push origin main
+
+    # Undo a merge
+    git reset --hard ORIG_HEAD
+
+    # Alternative merge undo
+    git revert -m 1 <merge_commit_id>
+
+    # Stash changes
+    git stash
+
+    # Apply stashed changes
+    git stash pop

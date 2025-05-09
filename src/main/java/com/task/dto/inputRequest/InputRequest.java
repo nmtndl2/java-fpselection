@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,6 +40,8 @@ public class InputRequest {
 
     private int noOfBatch;
     private int noOfPress;
+    private LocalTime washingT;
+    private LocalTime sqOutletT;
 
 
     //Below Variable set on customize

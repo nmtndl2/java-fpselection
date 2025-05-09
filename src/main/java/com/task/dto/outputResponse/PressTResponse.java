@@ -11,8 +11,8 @@ public class PressTResponse {
     private LocalTime cakeAirT;
     private LocalTime sqInletT;
     private LocalTime sqOutletT;
-    private LocalTime onePlatePST;
-    private LocalTime onCyclePST;
+    private LocalTime onePlatePsT;
+    private LocalTime onCyclePsT;
     private LocalTime onePlateCwT;
     private LocalTime onCycleCwT;
     private LocalTime cakeWT;

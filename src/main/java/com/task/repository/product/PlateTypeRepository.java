@@ -7,7 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlateTypeRepository extends JpaRepository<PlateType, Long> {
     boolean existsByTypeName(String typeName);
-
-
-
 }
