@@ -21,4 +21,9 @@ public class PressController {
     public ResponseEntity<PressResponse> addPress(@Valid @RequestBody PressRequest pressRequest) {
         return ResponseEntity.ok(pressService.addPress(pressRequest));
     }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<PressResponse>> getAll() {
+        return ResponseEntity.ok(pressService.getAll());
+    }
 }
