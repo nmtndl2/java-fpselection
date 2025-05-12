@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,6 +37,12 @@ public class InputServiceImpl implements InputService {
     @Override
     public DashboardResponse calculateDashboardData(InputRequest inputRequest) {
         List<String> pressSizes = plateRepository.findDistinctPressSizeByPlateType(inputRequest.getPlateType());
+        List<String> availablePressSizes = pressRepository.findAllPressSizes();
+
+        List<String> matchingPressSizes = pressSizes.stream()
+                .filter(availablePressSizes::contains)
+                .collect(Collectors.toList());
+
         List<PressDataResponse> responseList = new ArrayList<>();
         List<PressTResponse> pressTResponses = new ArrayList<>();
 
@@ -49,7 +56,7 @@ public class InputServiceImpl implements InputService {
         slurryResponse.setTotalDrySolid(totalDrySolid);
         slurryResponse.setTotalWetCake(totalWetCake);
 
-        for (String pressSize : pressSizes) {
+        for (String pressSize : matchingPressSizes) {
             Press press = pressRepository.findByPressSize(pressSize);
 
             Plate plate = plateRepository.findByPressSizeAndPlateType(pressSize, inputRequest.getPlateType());
@@ -59,14 +66,21 @@ public class InputServiceImpl implements InputService {
             int noOfBatch = (inputRequest.getNoOfBatch() == 0) ? 1 : inputRequest.getNoOfBatch();
 
             int noOfChamber = (int) Math.ceil((totalWetCake / (noOfPress * noOfBatch)) / onePlateVolume);
-            int validNoOfChamber = (noOfChamber<=press.getMaxChamber()) ? noOfChamber : 0;
+//            int validNoOfChamber = (noOfChamber<=press.getMaxChamber()) ? noOfChamber : 0;
 
-            int totalVolume = validNoOfChamber * onePlateVolume;
+            int totalVolume = noOfChamber * onePlateVolume;
 
-            int feedPumpFlow = getFlowRateByChamberCount(pressSize, validNoOfChamber);
+            Integer feedPumpFlow;
+            if (!(noOfChamber > press.getMaxChamber())) {
+                feedPumpFlow = getFlowRateByChamberCount(pressSize, noOfChamber);
+            } else {
+                feedPumpFlow = 1;
+            }
+
             double airCompressDeli = (totalVolume / 28.28);
+
             int sqInletWater = sqPumpRepository.findByPressSize(pressSize).getSqInletWater();
-            int sqWaterUsed = sqInletWater * (validNoOfChamber / 2);
+            int sqWaterUsed = sqInletWater * (noOfChamber / 2);
             int sqTankCap = sqWaterUsed + (int) (sqWaterUsed * 0.3);
 
             long pumpOnSeconds =
@@ -86,20 +100,38 @@ public class InputServiceImpl implements InputService {
             pressData.setOnePlateVolume(onePlateVolume);
             pressData.setNoOfPress(noOfPress);
             pressData.setNoOfBatch(noOfBatch);
-            pressData.setNoOfChamber(validNoOfChamber);
-            if (noOfChamber > press.getMaxChamber()) {
-                pressData.setMessage("Calculated chambers: " + noOfChamber + ", Max allowed: "+ press.getMaxChamber() +" (Exceeds limit)");
-            } else {
-                pressData.setMessage("Calculated chambers: " + noOfChamber + ", Max allowed: "+ press.getMaxChamber());
-            }
+            pressData.setNoOfChamber(noOfChamber);
+
             pressData.setTotalVolume(totalVolume);
             pressData.setFeedPumpFlow(feedPumpFlow);
             pressData.setAirCompressDeli(airCompressDeli);
+
             pressData.setSqWaterUsed(sqWaterUsed);
             pressData.setSqTankCap(sqTankCap);
-            pressData.setCw1PWaterUsed(cw1PWaterUsed);
+
+            pressData.setCw1PWaterUsed( cw1PWaterUsed);
             pressData.setCw1CWaterUsed(cw1CWaterUsed);
             pressData.setCwTankCap(cwTankCap);
+
+            if (noOfChamber > press.getMaxChamber()) {
+                pressData.setMessage("Calculated chambers: " + noOfChamber + ", Max allowed: "+ press.getMaxChamber() +" (Exceeds limit)");
+                pressData.setTotalVolume(null);
+                pressData.setFeedPumpFlow(null);
+                pressData.setAirCompressDeli(null);
+                pressData.setCw1PWaterUsed(null);
+                pressData.setCw1CWaterUsed(null);
+                pressData.setCwTankCap(null);
+                pressData.setSqWaterUsed(null);
+                pressData.setSqTankCap(null);
+
+            } else {
+                pressData.setMessage(null);
+            }
+
+            if (!"Membrane".equalsIgnoreCase(inputRequest.getPlateType())) {
+                pressData.setSqWaterUsed(null);
+                pressData.setSqTankCap(null);
+            }
 
             responseList.add(pressData);
 

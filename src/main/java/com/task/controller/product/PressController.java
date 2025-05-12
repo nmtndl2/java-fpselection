@@ -26,4 +26,21 @@ public class PressController {
     public ResponseEntity<List<PressResponse>> getAll() {
         return ResponseEntity.ok(pressService.getAll());
     }
+
+    @PutMapping("/updatePress/{pressId}")
+    public ResponseEntity<PressResponse> updatePress(@PathVariable Long pressId, @RequestBody PressRequest pressRequest) {
+        return ResponseEntity.ok(pressService.updatePress(pressId, pressRequest));
+    }
+
+    @DeleteMapping("/{pressId}")
+    public ResponseEntity<String> deletePress(@PathVariable Long pressId) {
+        pressService.deletePressById(pressId);
+        return ResponseEntity.ok("Press with press size " + pressId + " deleted successfully.");
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteAllPress() {
+        pressService.deleteAllPress();
+        return ResponseEntity.ok("All press deleted successfully.");
+    }
 }

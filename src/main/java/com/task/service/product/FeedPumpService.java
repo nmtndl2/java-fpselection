@@ -11,4 +11,6 @@ public interface FeedPumpService {
 //    FeedPump getFeedPumpById(Long id);
 //    FeedPump updateFeedPump(Long id,FeedPumpRequest updatedFeedPumpRequeset);
 //    void deleteFeedPump(Long id);
+
+    void deleteFeedPumpById(Long id);
 }

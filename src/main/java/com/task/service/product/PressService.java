@@ -8,4 +8,7 @@ import java.util.List;
 public interface PressService {
     PressResponse addPress(PressRequest pressRequest);
     List<PressResponse> getAll();
+    PressResponse updatePress(Long pressId, PressRequest pressRequest);
+    void deletePressById(Long pressId);
+    void deleteAllPress();
 }

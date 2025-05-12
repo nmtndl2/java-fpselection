@@ -1,5 +1,6 @@
 package com.task.dto.outputResponse;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,13 +15,31 @@ public class PressDataResponse {
     private int noOfPress;
     private int noOfBatch;
     private int noOfChamber;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private String message;
-    private int totalVolume;
-    private int feedPumpFlow;
-    private double airCompressDeli;
-    private int sqWaterUsed;
-    private int  sqTankCap;
-    private double cw1PWaterUsed;
-    private double cw1CWaterUsed;
-    private int cwTankCap;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private Integer totalVolume;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private Integer feedPumpFlow;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private Double airCompressDeli;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private Integer sqWaterUsed;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private Integer  sqTankCap;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private Integer cw1PWaterUsed;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private Integer cw1CWaterUsed;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private Integer cwTankCap;
 }

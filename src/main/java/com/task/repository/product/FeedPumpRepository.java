@@ -15,4 +15,6 @@ public interface FeedPumpRepository extends JpaRepository<FeedPump, Long> {
 
     Optional<FeedPump> findByPressSize(String pressSize);
 
+    void deleteByPressSize(String pressSize);
+
 }

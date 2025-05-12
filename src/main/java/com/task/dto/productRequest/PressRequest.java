@@ -21,7 +21,7 @@ public class PressRequest {
     private String pressSize;
 
     @Positive(message = "Maximum chamber must be a positive number")
-    private int maxChamber;
+    private Integer maxChamber;
 
     @NotNull(message = "Cake dry air time is required")
     private LocalTime cakeAirT;
@@ -55,5 +55,5 @@ public class PressRequest {
     private LocalTime cwDownDT;
     private LocalTime cwUpT;
     private LocalTime cwUpDT;
-    private int cwFlowRate;
+    private Integer cwFlowRate;
 }
