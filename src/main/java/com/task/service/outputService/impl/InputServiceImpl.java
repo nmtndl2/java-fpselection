@@ -5,10 +5,7 @@ import com.task.dto.outputResponse.DashboardResponse;
 import com.task.dto.outputResponse.PressDataResponse;
 import com.task.dto.outputResponse.PressTResponse;
 import com.task.dto.outputResponse.SlurryResponse;
-import com.task.entities.product.ChamberRange;
-import com.task.entities.product.FeedPump;
-import com.task.entities.product.Plate;
-import com.task.entities.product.Press;
+import com.task.entities.product.*;
 import com.task.repository.product.FeedPumpRepository;
 import com.task.repository.product.PlateRepository;
 import com.task.repository.product.PressRepository;
@@ -81,6 +78,23 @@ public class InputServiceImpl implements InputService {
 
             int sqInletWater = sqPumpRepository.findByPressSize(pressSize).getSqInletWater();
             int sqWaterUsed = sqInletWater * (noOfChamber / 2);
+
+            SqPump sqPump = sqPumpRepository.findByPressSize(pressSize);
+            List<Double> flowRates = sqPump.getFlowRates().stream()
+                    .map(SqCalcFR::getFlowRate)
+                    .toList();
+
+            Double selectedFlowRate = null;
+            for (Double rate : flowRates) {
+                if ((sqWaterUsed / rate) >= sqPump.getSqMaxTMin()) {
+                    selectedFlowRate = rate;
+                    break;
+                }
+            }
+
+            sqPump.setSqFlowRate(selectedFlowRate);
+
+            Double setCwTankCap = sqPump.getSqMaxTMin();
             int sqTankCap = sqWaterUsed + (int) (sqWaterUsed * 0.3);
 
             long pumpOnSeconds =
@@ -106,10 +120,11 @@ public class InputServiceImpl implements InputService {
             pressData.setFeedPumpFlow(feedPumpFlow);
             pressData.setAirCompressDeli(airCompressDeli);
 
+            pressData.setSqFlowRate(null);
             pressData.setSqWaterUsed(sqWaterUsed);
             pressData.setSqTankCap(sqTankCap);
 
-            pressData.setCw1PWaterUsed( cw1PWaterUsed);
+            pressData.setCw1PWaterUsed(cw1PWaterUsed);
             pressData.setCw1CWaterUsed(cw1CWaterUsed);
             pressData.setCwTankCap(cwTankCap);
 
@@ -121,6 +136,7 @@ public class InputServiceImpl implements InputService {
                 pressData.setCw1PWaterUsed(null);
                 pressData.setCw1CWaterUsed(null);
                 pressData.setCwTankCap(null);
+                pressData.setSqFlowRate(null);
                 pressData.setSqWaterUsed(null);
                 pressData.setSqTankCap(null);
 

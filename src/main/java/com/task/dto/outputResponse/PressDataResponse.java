@@ -29,10 +29,13 @@ public class PressDataResponse {
     private Double airCompressDeli;
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private Double sqFlowRate;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private Integer sqWaterUsed;
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private Integer  sqTankCap;
+    private Integer sqTankCap;
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private Integer cw1PWaterUsed;
