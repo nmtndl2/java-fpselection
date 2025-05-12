@@ -13,8 +13,11 @@ import java.util.Optional;
 public interface PressRepository extends JpaRepository<Press, Long> {
     boolean existsByPressSize(String pressSize);
 
+<<<<<<< Updated upstream
 //    @Query("SELECT DISTINCT p.pressSize FROM Press p")
 //    List<String> findAllPressSizes();
 
+=======
+>>>>>>> Stashed changes
     Press findByPressSize(String pressSize);
 }

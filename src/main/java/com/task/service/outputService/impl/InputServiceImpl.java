@@ -35,13 +35,11 @@ public class InputServiceImpl implements InputService {
 
     @Override
     public DashboardResponse calculateDashboardData(InputRequest inputRequest) {
-        List<String> pressSizes = plateRepository.findDistinctPressSizeByPlateType(inputRequest.getPlateType());
+        List<String> pressSizes = pressRepository.findAllPressSizes();
         List<PressDataResponse> responseList = new ArrayList<>();
         List<PressTResponse> pressTResponses = new ArrayList<>();
 
-        double finalDensity = inputRequest.getDensityOfDrySolid() == 0 ? 1 : inputRequest.getDensityOfDrySolid();
-
-        double totalDrySolid = (inputRequest.getSludgeQty() * inputRequest.getDrySolidParticle()) / finalDensity;
+        double totalDrySolid = inputRequest.getDensityOfDrySolid() * (inputRequest.getDrySolidParticle());
         double totalWetCake= totalDrySolid * (100 / (100 - inputRequest.getMoistureContain()));
 
         // Example SlurryResponse calculation
@@ -116,57 +114,33 @@ public class InputServiceImpl implements InputService {
             LocalTime feedT = LocalTime.MIDNIGHT.plus(feedTime);
 
             // Air Time (Duration)
-            LocalTime cakeWT = inputRequest.getWashingT();
+            LocalTime cakeWT = null;
 
             // Air Time (Duration)
             LocalTime cakeAirT = press.getCakeAirT();
 
             // Squeezing Time (Duration)
-            long sqInletTimeSecond = ((sqWaterUsed * 3600L) / (feedPumpFlow));
+            long sqInletTimeSecond = ((sqWaterUsed * 3600) / (feedPumpFlow));
             Duration sqInletTime = Duration.ofSeconds(sqInletTimeSecond);
             LocalTime sqInletT = LocalTime.MIDNIGHT.plus(sqInletTime);
 
-            LocalTime sqOutletT = (inputRequest.getSqOutletT() == null)
-                    ? LocalTime.parse("00:20:00")
-                    : inputRequest.getSqOutletT();
+            //#################################################################
+            LocalTime sqOutletT = null;
 
             // Plate Shifter Time (Duration)
-            long onePlatePsTimeSecond = press.getPsFwdT().toSecondOfDay() +
+            long onePlatePSTimeSecond = press.getPsFwdT().toSecondOfDay() +
                                             press.getPsFwdDT().toSecondOfDay() +
                                                 press.getPsRevT().toSecondOfDay() +
                                                     press.getPsRevDT().toSecondOfDay();
-            Duration onePlatePsTime = Duration.ofSeconds(onePlatePsTimeSecond);
-            LocalTime onePlatePsT = LocalTime.MIDNIGHT.plus(onePlatePsTime);
+            Duration onePlatePSTime = Duration.ofSeconds(onePlatePSTimeSecond);
+            LocalTime onePlatePST = LocalTime.MIDNIGHT.plus(onePlatePSTime);
 
+            long onCyclePSTimeSecond = (onePlatePST.getSecond() * noOfChamber); //##################
+            LocalTime onCyclePST = null;
 
-            long onCyclePsTimeSecond = ((long) onePlatePsT.toSecondOfDay() * noOfChamber) +
-                                            ((long) press.getPsFwdT().toSecondOfDay() * (noOfChamber + 2));
-            Duration onCyclePsTime = Duration.ofSeconds(onCyclePsTimeSecond);
-            LocalTime onCyclePsT = LocalTime.MIDNIGHT.plus(onCyclePsTime);
-
-            //ClothWashing Time (Duration)
-            long onePlateCwTimeSecond = press.getPsFwdT().toSecondOfDay() +
-                    press.getPsFwdDT().toSecondOfDay() +
-                    (press.getPsRevT().toSecondOfDay() / 2) +
-                    press.getPsRevDT().toSecondOfDay() +
-                    press.getCwDownT().toSecondOfDay() +
-                    press.getCwDownDT().toSecondOfDay() +
-                    press.getCwFwdT().toSecondOfDay() +
-                    press.getCwFwdDT().toSecondOfDay() +
-                    press.getCwRevT().toSecondOfDay() +
-                    press.getCwRevDT().toSecondOfDay() +
-                    press.getCwUpT().toSecondOfDay() +
-                    press.getCwUpDT().toSecondOfDay() +
-                    (press.getPsRevT().toSecondOfDay() / 2) +
-                    press.getPsRevDT().toSecondOfDay();
-            Duration onePlateCwTime = Duration.ofSeconds(onePlateCwTimeSecond);
-            LocalTime onePlateCwT = LocalTime.MIDNIGHT.plus(onePlateCwTime);
-
-
-            long onCycleCwTimeSecond = ((long) onePlateCwT.toSecondOfDay() * noOfChamber) +
-                    ((long) press.getPsFwdT().toSecondOfDay() * (noOfChamber + 2));
-            Duration onCycleCwTime = Duration.ofSeconds(onCycleCwTimeSecond);
-            LocalTime onCycleCwT = LocalTime.MIDNIGHT.plus(onCycleCwTime);
+            // ClothWashing Time (Duration)
+            LocalTime onePlateCwT = null;
+            LocalTime onCycleCwT = null;
 
             PressTResponse pressT = new PressTResponse();
             pressT.setPressingCT(pressingCT);
@@ -174,8 +148,8 @@ public class InputServiceImpl implements InputService {
             pressT.setCakeAirT(cakeAirT);
             pressT.setSqInletT(sqInletT);
             pressT.setSqOutletT(sqOutletT);
-            pressT.setOnePlatePsT(onePlatePsT);
-            pressT.setOnCyclePsT(onCyclePsT);
+            pressT.setOnePlatePST(onePlatePST);
+            pressT.setOnCyclePST(onCyclePST);
             pressT.setOnePlateCwT(onePlateCwT);
             pressT.setOnCycleCwT(onCycleCwT);
             pressT.setCakeWT(cakeWT);

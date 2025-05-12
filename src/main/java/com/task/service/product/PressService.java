@@ -8,5 +8,4 @@ import java.util.List;
 public interface PressService {
     PressResponse addPress(PressRequest pressRequest);
     List<PressResponse> getAll();
-
 }
