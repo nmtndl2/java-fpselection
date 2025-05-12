@@ -11,6 +11,8 @@ import com.task.service.product.PressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PressServiceImpl implements PressService {
@@ -29,5 +31,11 @@ public class PressServiceImpl implements PressService {
 
         Press press = pressRepository.save(pressMapper.reqToEntity(pressRequest));
         return pressMapper.entityToRes(press);
+    }
+
+    @Override
+    public List<PressResponse> getAll() {
+        List<Press> pressList = pressRepository.findAll();
+        return pressMapper.entityToRes(pressList);
     }
 }
