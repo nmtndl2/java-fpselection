@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "dbaa5edc-8e65-42e0-8008-215d80100d69",
+		"_postman_id": "7aff319b-d426-4794-af5a-7f726f2c1155",
 		"name": "FPSelection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "42844201",
-		"_collection_link": "https://martian-resonance-846720.postman.co/workspace/Team-Workspace~12c66e62-b0ab-46f1-87b7-bd06c330b8c0/collection/42844201-dbaa5edc-8e65-42e0-8008-215d80100d69?action=share&source=collection_link&creator=42844201"
+		"_collection_link": "https://martian-resonance-846720.postman.co/workspace/Team-Workspace~12c66e62-b0ab-46f1-87b7-bd06c330b8c0/collection/42844201-7aff319b-d426-4794-af5a-7f726f2c1155?action=share&source=collection_link&creator=42844201"
 	},
 	"item": [
 		{
@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pressSize\": \"1200 x 1200\",\n    \"maxChamber\": 100,\n    \"cakeAirT\": \"02:00:00\",\n    \"cyFwdT\": \"00:02:30\",\n    \"cyRevT\": \"00:02:00\",\n    \"dtAvailable\": true,\n    \"dtOpenT\": \"00:00:10\",\n    \"dtClosedT\": \"00:00:10\",\n    \"psAvailable\": true,\n    \"psFwdFPlateT\": \"00:00:18\",\n    \"psFwdT\": \"00:00:07\",\n    \"psFwdDT\": \"00:00:03\",\n    \"psRevT\": \"00:00:07\",\n    \"psRevDT\": \"00:00:03\",\n    \"cwAvailable\": true,\n    \"cwFwdT\": \"00:00:22\",\n    \"cwFwdDT\": \"00:00:03\",\n    \"cwRevT\": \"00:00:22\",\n    \"cwRevDT\": \"00:00:03\",\n    \"cwDownT\": \"00:00:12\",\n    \"cwDownDT\": \"00:00:03\",\n    \"cwUpT\": \"00:00:08\",\n    \"cwUpDT\": \"00:00:32\",\n    \"cwFlowRate\": 10.0\n  }",
+							"raw": "{\n    \"pressSize\": \"1000 x 1000\",\n    \"maxChamber\": 60,\n    \"cakeAirT\": \"02:00:00\",\n    \"cyFwdT\": \"00:02:30\",\n    \"cyRevT\": \"00:02:00\",\n    \"dtAvailable\": true,\n    \"dtOpenT\": \"00:00:10\",\n    \"dtClosedT\": \"00:00:10\",\n    \"psAvailable\": true,\n    \"psFwdFPlateT\": \"00:00:18\",\n    \"psFwdT\": \"00:00:07\",\n    \"psFwdDT\": \"00:00:03\",\n    \"psRevT\": \"00:00:07\",\n    \"psRevDT\": \"00:00:03\",\n    \"cwAvailable\": true,\n    \"cwFwdT\": \"00:00:22\",\n    \"cwFwdDT\": \"00:00:03\",\n    \"cwRevT\": \"00:00:22\",\n    \"cwRevDT\": \"00:00:03\",\n    \"cwDownT\": \"00:00:12\",\n    \"cwDownDT\": \"00:00:03\",\n    \"cwUpT\": \"00:00:08\",\n    \"cwUpDT\": \"00:00:32\",\n    \"cwFlowRate\": 10.0\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -40,6 +40,88 @@
 								"api",
 								"press",
 								"addPress"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Press",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/api/press/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"press",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update press by ID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"cwUpDT\": \"00:00:32\",\r\n        \"cwFlowRate\": 10\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/press/updatePress/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"press",
+								"updatePress",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete All Press",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/feed-pumps",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"feed-pumps"
 							]
 						}
 					},
@@ -62,7 +144,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pressSize\": \"1200 x 1200\",\n    \"plateType\": \"Membrane\",\n    \"volume\": 50,\n    \"filtrationArea\": 2.1,\n    \"cakeThk\": 40,\n    \"finalCakeThk\": 35\n  }",
+							"raw": "{\n    \"pressSize\": \"1000 x 1000\",\n    \"plateType\": \"Recessed\",\n    \"volume\": 30,\n    \"filtrationArea\": 2.0,\n    \"cakeThk\": 35,\n    \"finalCakeThk\": 30\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -142,7 +224,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pressSize\": \"1200 x 1200\",\n    \"chamberRanges\": [\n      {\n        \"rangeLabel\": \"0-30\",\n        \"flowRate\": 12\n      },\n      {\n        \"rangeLabel\": \"31-70\",\n        \"flowRate\": 18\n      },\n      {\n        \"rangeLabel\": \"71-80\",\n        \"flowRate\": 25\n      },\n      {\n        \"rangeLabel\": \"81-140\",\n        \"flowRate\": 32\n      }\n    ]\n  }",
+							"raw": "{\n    \"pressSize\": \"1000 x 1000\",\n    \"chamberRanges\": [\n        {\n        \"rangeLabel\": \"0-30\",\n        \"flowRate\": 5\n        },\n        {\n        \"rangeLabel\": \"31-60\",\n        \"flowRate\": 10\n        }\n\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -159,6 +241,27 @@
 							"path": [
 								"api",
 								"feed-pumps"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Pump",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/feed-pumps/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"feed-pumps",
+								"4"
 							]
 						}
 					},
@@ -181,7 +284,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n        \"pressSize\": \"1200 x 1200\",\n        \"sqMaxTMin\": 25,\n        \"sqInletWater\": 40,\n        \"flowRates\": [\n          {\n            \"flowRate\": 2.0\n          },\n          {\n            \"flowRate\":2.8\n          },\n          {\n            \"flowRate\": 4.0\n          },\n          {\n            \"flowRate\": 5.0\n          },\n          {\n            \"flowRate\": 8.0\n          }\n        ]\n      }",
+							"raw": "{\n        \"pressSize\": \"1000 x 1000\",\n        \"sqMaxTMin\": 25,\n        \"sqInletWater\": 40,\n        \"flowRates\": [\n          {\n            \"flowRate\": 2.0\n          },\n          {\n            \"flowRate\":2.8\n          },\n          {\n            \"flowRate\": 4.0\n          },\n          {\n            \"flowRate\": 5.0\n          },\n          {\n            \"flowRate\": 8.0\n          }\n        ]\n      }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -221,7 +324,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"clientName\": \"Acme Corp\",\n    \"sludgeName\": \"Industrial Sludge\",\n    \"sludgeType\": \"Type A\",\n    \"sludgeQty\": 100,\n    \"drySolidParticle\": 10,\n    \"densityOfDrySolid\": 1,\n    \"moistureContain\": 50,\n    \"noOfPress\": 1,\n    \"noOfBatch\": 1,\n    \"plateType\": \"Membrane\",\n    \"washingT\": \"2:00:00\",\n    \"cusFeedRate\": 4.2\n}",
+							"raw": "{\n    \"clientName\": \"Acme Corp\",\n    \"clientRef\" : \"Export\",\n    \"sludgeName\": \"Industrial Sludge\",\n    \"sludgeType\": \"Type A\",\n    \"sludgeQty\": 2000,\n    \"drySolidParticle\": 10,\n    \"densityOfDrySolid\": 1,\n    \"moistureContain\": 50,\n    \"noOfPress\": 1,\n    \"noOfBatch\": 20,\n    \"plateType\": \"Recessed\",\n    \"washingT\": \"02:00:00\",\n    \"sqOutletT\": \"00:25:00\",\n    \"cusFeedRate\": 15\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
