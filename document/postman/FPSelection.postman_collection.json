@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pressSize\": \"1000 x 1000\",\n    \"maxChamber\": 60,\n    \"cakeAirT\": \"02:00:00\",\n    \"cyFwdT\": \"00:02:30\",\n    \"cyRevT\": \"00:02:00\",\n    \"dtAvailable\": true,\n    \"dtOpenT\": \"00:00:10\",\n    \"dtClosedT\": \"00:00:10\",\n    \"psAvailable\": true,\n    \"psFwdFPlateT\": \"00:00:18\",\n    \"psFwdT\": \"00:00:07\",\n    \"psFwdDT\": \"00:00:03\",\n    \"psRevT\": \"00:00:07\",\n    \"psRevDT\": \"00:00:03\",\n    \"cwAvailable\": true,\n    \"cwFwdT\": \"00:00:22\",\n    \"cwFwdDT\": \"00:00:03\",\n    \"cwRevT\": \"00:00:22\",\n    \"cwRevDT\": \"00:00:03\",\n    \"cwDownT\": \"00:00:12\",\n    \"cwDownDT\": \"00:00:03\",\n    \"cwUpT\": \"00:00:08\",\n    \"cwUpDT\": \"00:00:32\",\n    \"cwFlowRate\": 10.0\n  }",
+							"raw": "{\n    \"pressSize\": \"1000 x 1000\",\n    \"maxChamber\": 70,\n    \"cakeAirT\": \"02:00:00\",\n    \"cyFwdT\": \"00:02:30\",\n    \"cyRevT\": \"00:02:00\",\n    \"dtAvailable\": true,\n    \"dtOpenT\": \"00:00:10\",\n    \"dtClosedT\": \"00:00:10\",\n    \"psAvailable\": true,\n    \"psFwdFPlateT\": \"00:00:18\",\n    \"psFwdT\": \"00:00:07\",\n    \"psFwdDT\": \"00:00:03\",\n    \"psRevT\": \"00:00:07\",\n    \"psRevDT\": \"00:00:03\",\n    \"cwAvailable\": true,\n    \"cwFwdT\": \"00:00:22\",\n    \"cwFwdDT\": \"00:00:03\",\n    \"cwRevT\": \"00:00:22\",\n    \"cwRevDT\": \"00:00:03\",\n    \"cwDownT\": \"00:00:12\",\n    \"cwDownDT\": \"00:00:03\",\n    \"cwUpT\": \"00:00:08\",\n    \"cwUpDT\": \"00:00:32\",\n    \"cwFlowRate\": 10.0\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,7 +91,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/press/updatePress/1",
+							"raw": "http://localhost:8081/api/press/updatePress/7",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -101,7 +101,7 @@
 								"api",
 								"press",
 								"updatePress",
-								"1"
+								"7"
 							]
 						}
 					},
@@ -113,7 +113,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/feed-pumps",
+							"raw": "http://localhost:8081/api/press",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -121,7 +121,28 @@
 							"port": "8081",
 							"path": [
 								"api",
-								"feed-pumps"
+								"press"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/press/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"press",
+								"7"
 							]
 						}
 					},
@@ -144,7 +165,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pressSize\": \"1000 x 1000\",\n    \"plateType\": \"Recessed\",\n    \"volume\": 30,\n    \"filtrationArea\": 2.0,\n    \"cakeThk\": 35,\n    \"finalCakeThk\": 30\n  }",
+							"raw": "{\n    \"pressSize\": \"800 x 800\",\n    \"plateType\": \"Recessed\",\n    \"volume\": 20,\n    \"filtrationArea\": 1.5,\n    \"cakeThk\": 35,\n    \"finalCakeThk\": 30\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -162,6 +183,146 @@
 								"api",
 								"plate",
 								"addplate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Plate",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"finalCakeThk\": 30\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/plate/updateplate/202",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"plate",
+								"updateplate",
+								"202"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Plate",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/plate/getall",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"plate",
+								"getall"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/plate/get/202",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"plate",
+								"get",
+								"202"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/api/plate/delete/202",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"plate",
+								"delete",
+								"202"
 							]
 						}
 					},
@@ -202,6 +363,33 @@
 								"api",
 								"platetype",
 								"addplatetype"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Plate Type",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/api/platetype/delete/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"platetype",
+								"delete",
+								"1"
 							]
 						}
 					},
@@ -306,6 +494,58 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get All SqPump",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/squeezing/getall",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"squeezing",
+								"getall"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All SqPump Copy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"flowRates\": [\r\n        {\r\n            \"flowRate\": 2.0\r\n        },\r\n        {\r\n            \"flowRate\": 2.8\r\n        },\r\n        {\r\n            \"flowRate\": 4.0\r\n        },\r\n        {\r\n            \"flowRate\": 8.0\r\n        },\r\n        {\r\n            \"flowRate\": 10.0\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/squeezing/update/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"squeezing",
+								"update",
+								"2"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -324,7 +564,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"clientName\": \"Acme Corp\",\n    \"clientRef\" : \"Export\",\n    \"sludgeName\": \"Industrial Sludge\",\n    \"sludgeType\": \"Type A\",\n    \"sludgeQty\": 2000,\n    \"drySolidParticle\": 10,\n    \"densityOfDrySolid\": 1,\n    \"moistureContain\": 50,\n    \"noOfPress\": 1,\n    \"noOfBatch\": 20,\n    \"plateType\": \"Recessed\",\n    \"washingT\": \"02:00:00\",\n    \"sqOutletT\": \"00:25:00\",\n    \"cusFeedRate\": 15\n}\n",
+							"raw": "{\n    \"clientName\": \"Acme Corp\",\n    \"clientRef\" : \"Export\",\n    \"sludgeName\": \"Industrial Sludge\",\n    \"sludgeType\": \"Type A\",\n    \"sludgeQty\": 200,\n    \"drySolidParticle\": 10,\n    \"densityOfDrySolid\": 1,\n    \"moistureContain\": 50,\n    \"noOfPress\": 1,\n    \"noOfBatch\": 20,\n    \"plateType\": \"Membrane\",\n    \"washingT\": \"02:00:00\",\n    \"sqOutletT\": \"00:25:00\",\n    \"cusFeedRate\": 15\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -344,7 +584,104 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "calc",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"clientName\": \"Acme Corp\",\n    \"clientRef\" : \"Export\",\n    \"sludgeName\": \"Industrial Sludge\",\n    \"sludgeType\": \"Type A\",\n    \"sludgeQty\": 200,\n    \"drySolidParticle\": 20,\n    \"densityOfDrySolid\": 1,\n    \"moistureContain\": 50,\n    \"noOfPress\": 1,\n    \"noOfBatch\": 20,\n    \"plateType\": \"Membrane\",\n    \"washingT\": \"02:00:00\",\n    \"sqOutletT\": \"00:25:00\",\n    \"cusFeedRate\": 15\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/input",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"input"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 13 May 2025 08:02:54 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"slurryResponse\": {\n        \"totalDrySolid\": 4000,\n        \"totalWetCake\": 8000\n    },\n    \"pressDataResponse\": [\n        {\n            \"pressSize\": \"1500 x 1500\",\n            \"plateType\": \"Membrane\",\n            \"onePlateVolume\": 80,\n            \"noOfPress\": 1,\n            \"noOfBatch\": 20,\n            \"noOfChamber\": 6,\n            \"totalVolume\": 480,\n            \"feedPumpFlow\": 12,\n            \"airCompressDeli\": 16,\n            \"sqFlowRate\": 2,\n            \"sqWaterUsed\": 135,\n            \"sqTankCap\": 175,\n            \"cw1PWaterUsed\": 130,\n            \"cw1CWaterUsed\": 780,\n            \"cwTankCap\": 1014\n        },\n        {\n            \"pressSize\": \"1200 x 1200\",\n            \"plateType\": \"Membrane\",\n            \"onePlateVolume\": 50,\n            \"noOfPress\": 1,\n            \"noOfBatch\": 20,\n            \"noOfChamber\": 8,\n            \"totalVolume\": 400,\n            \"feedPumpFlow\": 12,\n            \"airCompressDeli\": 14,\n            \"sqFlowRate\": 2,\n            \"sqWaterUsed\": 160,\n            \"sqTankCap\": 208,\n            \"cw1PWaterUsed\": 130,\n            \"cw1CWaterUsed\": 1040,\n            \"cwTankCap\": 1352\n        },\n        {\n            \"pressSize\": \"1000 x 1000\",\n            \"plateType\": \"Membrane\",\n            \"onePlateVolume\": 35,\n            \"noOfPress\": 1,\n            \"noOfBatch\": 20,\n            \"noOfChamber\": 12,\n            \"totalVolume\": 420,\n            \"feedPumpFlow\": 5,\n            \"airCompressDeli\": 14,\n            \"sqFlowRate\": 2,\n            \"sqWaterUsed\": 240,\n            \"sqTankCap\": 312,\n            \"cw1PWaterUsed\": 130,\n            \"cw1CWaterUsed\": 1560,\n            \"cwTankCap\": 2028\n        }\n    ],\n    \"pressTResponse\": [\n        {\n            \"pressingCT\": \"00:02:40\",\n            \"feedT\": \"00:50:00\",\n            \"cakeAirT\": \"02:00:00\",\n            \"sqInletT\": \"00:04:03\",\n            \"sqOutletT\": \"00:25:00\",\n            \"onePlatePsT\": \"00:00:20\",\n            \"onCyclePsT\": \"00:02:56\",\n            \"onePlateCwT\": \"00:02:07\",\n            \"onCycleCwT\": \"00:13:38\",\n            \"cakeWT\": \"02:00:00\"\n        },\n        {\n            \"pressingCT\": \"00:02:40\",\n            \"feedT\": \"00:50:00\",\n            \"cakeAirT\": \"02:00:00\",\n            \"sqInletT\": \"00:04:48\",\n            \"sqOutletT\": \"00:25:00\",\n            \"onePlatePsT\": \"00:00:20\",\n            \"onCyclePsT\": \"00:03:50\",\n            \"onePlateCwT\": \"00:02:07\",\n            \"onCycleCwT\": \"00:18:06\",\n            \"cakeWT\": \"02:00:00\"\n        },\n        {\n            \"pressingCT\": \"00:02:40\",\n            \"feedT\": \"02:00:00\",\n            \"cakeAirT\": \"02:00:00\",\n            \"sqInletT\": \"00:07:12\",\n            \"sqOutletT\": \"00:25:00\",\n            \"onePlatePsT\": \"00:00:20\",\n            \"onCyclePsT\": \"00:05:38\",\n            \"onePlateCwT\": \"00:02:07\",\n            \"onCycleCwT\": \"00:27:02\",\n            \"cakeWT\": \"02:00:00\"\n        }\n    ],\n    \"warnings\": [\n        \"Press not found for size 800 x 800\",\n        \"SQ Pump not found for size 800 x 800\"\n    ]\n}"
+						}
+					]
 				}
 			]
 		}
