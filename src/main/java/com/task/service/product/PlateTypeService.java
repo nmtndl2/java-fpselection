@@ -5,4 +5,6 @@ import com.task.dto.response.PlateTypeResponse;
 
 public interface PlateTypeService {
     PlateTypeResponse addPlateType(PlateTypeRequest plateTypeRequest);
+
+    String deletePlateType(Long plateTypeId);
 }

@@ -26,7 +26,7 @@ public class PressDataResponse {
     private Integer feedPumpFlow;
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private Double airCompressDeli;
+    private Integer airCompressDeli;
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private Double sqFlowRate;

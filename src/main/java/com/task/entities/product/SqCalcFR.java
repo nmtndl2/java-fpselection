@@ -1,5 +1,6 @@
 package com.task.entities.product;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +20,6 @@ public class SqCalcFR {
 
     @ManyToOne
     @JoinColumn(name = "sq_pump_id")
+    @JsonBackReference
     private SqPump sqPump;
 }

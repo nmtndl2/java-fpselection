@@ -4,7 +4,10 @@ import com.task.dto.productRequest.PlateTypeRequest;
 import com.task.dto.response.PlateTypeResponse;
 import com.task.entities.product.PlateType;
 import com.task.exception.AlreadyExistsException;
+import com.task.exception.BadRequestException;
+import com.task.exception.ResourceNotExistsException;
 import com.task.mapper.PlateTypeMapper;
+import com.task.repository.product.PlateRepository;
 import com.task.repository.product.PlateTypeRepository;
 import com.task.service.product.PlateTypeService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,7 @@ public class PlateTypeServiceImpl implements PlateTypeService {
 
     private final PlateTypeRepository plateTypeRepository;
     private final PlateTypeMapper plateTypeMapper;
-
+    private final PlateRepository plateRepository;
 
     @Override
     public PlateTypeResponse addPlateType(PlateTypeRequest plateTypeRequest) {
@@ -28,4 +31,20 @@ public class PlateTypeServiceImpl implements PlateTypeService {
         return plateTypeMapper.entityToResp(plateType);
     }
 
+    @Override
+    public String deletePlateType(Long plateTypeId) {
+        PlateType plateType = plateTypeRepository.findById(plateTypeId)
+                .orElseThrow(() -> new ResourceNotExistsException(
+                        "Plate type with ID " + plateTypeId + " does not exist"
+                ));
+
+        boolean usedPlateType = plateRepository.existsByPlateType(plateType.getTypeName());
+
+        if (usedPlateType) {
+            throw new BadRequestException("Plate Type Used in plate");
+        }
+
+        plateTypeRepository.delete(plateType);
+        return "Plate type successfully deleted";
+    }
 }

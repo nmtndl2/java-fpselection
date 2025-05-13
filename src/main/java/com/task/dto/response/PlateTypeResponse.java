@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlateTypeResponse {
-
+    private Long plateTypeId;
     private String typeName;
 }

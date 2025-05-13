@@ -19,15 +19,14 @@ public class PlateRequest {
     private String plateType;
 
     @NotNull(message = "Volume is required")
-    private int volume;
+    private Integer volume;
 
     @NotNull(message = "Filtration area is required")
-    private double filtrationArea;
+    private Double filtrationArea;
 
     @NumberFormat
-    private int cakeThk;
+    private Integer cakeThk;
 
     @NumberFormat
-    private int finalCakeThk;
-
+    private Integer finalCakeThk;
 }

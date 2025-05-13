@@ -18,10 +18,10 @@ public class SqPumpRequest {
     private String pressSize;
 
     @NotNull(message = "Maximum time is required")
-    private int sqMaxTMin;
+    private Integer sqMaxTMin;
 
     @NotNull(message = "Squeezing water is required")
-    private int sqInletWater;
+    private Integer sqInletWater;
 
     private List<SqCalcFRRequest> flowRates = new ArrayList<>();
 }

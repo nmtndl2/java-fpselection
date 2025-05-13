@@ -6,10 +6,7 @@ import com.task.service.product.PlateTypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/platetype")
@@ -21,5 +18,10 @@ public class PlateTypeController {
     @PostMapping("/addplatetype")
     public ResponseEntity<PlateTypeResponse> addPlateType(@Valid @RequestBody PlateTypeRequest plateTypeRequest) {
         return ResponseEntity.ok(plateTypeService.addPlateType(plateTypeRequest));
+    }
+
+    @DeleteMapping("/delete/{plateTypeId}")
+    public ResponseEntity<String> deletePlateType(@PathVariable Long plateTypeId) {
+        return ResponseEntity.ok(plateTypeService.deletePlateType(plateTypeId));
     }
 }

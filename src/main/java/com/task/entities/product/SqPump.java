@@ -1,5 +1,6 @@
 package com.task.entities.product;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,5 +26,6 @@ public class SqPump {
     private int sqMaxTMin;
 
     @OneToMany(mappedBy = "sqPump", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<SqCalcFR> flowRates = new ArrayList<>();
 }
