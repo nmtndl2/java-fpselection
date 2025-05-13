@@ -51,7 +51,9 @@ public class PlateServiceImpl implements PlateService {
         plate.setCakeThk((plateRequest.getCakeThk() == null) ? plate.getCakeThk() : plateRequest.getCakeThk());
         plate.setFinalCakeThk((plateRequest.getFinalCakeThk() == null) ? plate.getFinalCakeThk() : plateRequest.getFinalCakeThk());
 
-        return plateMapper.entityToResp(plateRepository.save(plate));
+        Plate updatePlate = plateRepository.save(plate);
+
+        return plateMapper.entityToResp(plateRepository.save(updatePlate));
     }
 
     @Override

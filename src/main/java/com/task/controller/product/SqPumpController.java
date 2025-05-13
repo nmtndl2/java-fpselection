@@ -18,7 +18,6 @@ public class SqPumpController {
 
     private final SqPumpService sqPumpService;
 
-
     @PostMapping("/addPump")
     public ResponseEntity<SqPumpResponse> addSqPump(@Valid @RequestBody SqPumpRequest sqPumpRequest) {
         return ResponseEntity.ok(sqPumpService.addSqPump(sqPumpRequest)) ;
@@ -29,10 +28,18 @@ public class SqPumpController {
         return ResponseEntity.ok(sqPumpService.getAll());
     }
 
+    @GetMapping("/get/{id}")
+    public ResponseEntity<SqPumpResponse> getSqPump(@PathVariable Long id) {
+        return ResponseEntity.ok(sqPumpService.getSqPump(id));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteSqPump(@PathVariable Long id) {
+        return ResponseEntity.ok(sqPumpService.deleteSqPump(id));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<SqPumpResponse> updateSqPump(@PathVariable Long id, @RequestBody SqPumpRequest sqPumpRequest) {
         return ResponseEntity.ok(sqPumpService.updateSqPump(id, sqPumpRequest));
     }
-
-
 }

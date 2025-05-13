@@ -85,12 +85,11 @@ public class PressServiceImpl implements PressService {
     }
 
     @Override
-    public void deleteAllPress() {
-        List<Press> press = pressRepository.findAll();
+    public PressResponse getPress(Long pressId) {
+        Press press = pressRepository.findById(pressId)
+                .orElseThrow(() -> new ResourceNotExistsException("Press id : " + pressId + " is not found !!"));
 
-        if (press.isEmpty()) {
-            throw new BadRequestException("Press is empty!!");
-        }
-        pressRepository.deleteAll();
+        return pressMapper.entityToRes(press);
     }
+
 }

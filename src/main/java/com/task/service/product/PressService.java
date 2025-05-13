@@ -10,5 +10,6 @@ public interface PressService {
     List<PressResponse> getAll();
     PressResponse updatePress(Long pressId, PressRequest pressRequest);
     void deletePressById(Long pressId);
-    void deleteAllPress();
+
+    PressResponse getPress(Long pressId);
 }

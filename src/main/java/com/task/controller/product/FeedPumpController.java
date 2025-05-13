@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/feed-pumps")
 @RequiredArgsConstructor
@@ -27,5 +29,21 @@ public class FeedPumpController {
         feedPumpService.deleteFeedPumpById(id);
         return ResponseEntity.ok("FeedPump with press size " + id + " deleted successfully.");
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<FeedPumpResponse> updateFeedPump(@PathVariable Long id, @RequestBody FeedPumpRequest feedPumpRequest) {
+        return ResponseEntity.ok(feedPumpService.updateFeedPump(id, feedPumpRequest));
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<FeedPumpResponse> getPump(@PathVariable Long id) {
+        return ResponseEntity.ok(feedPumpService.getPump(id));
+    }
+
+    @GetMapping("/getall")
+    public ResponseEntity<List<FeedPumpResponse>> getAllPump() {
+        return ResponseEntity.ok(feedPumpService.getAllPump());
+    }
+
 
 }

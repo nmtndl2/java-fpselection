@@ -4,13 +4,16 @@ import com.task.dto.productRequest.FeedPumpRequest;
 import com.task.dto.response.FeedPumpResponse;
 import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.List;
+
+
 public interface FeedPumpService {
     FeedPumpResponse createFeedPump(FeedPumpRequest feedPumpRequest);
-//    List<FeedPump> getAllFeedPump();
-//    FeedPump getFeedPumpById(Long id);
-//    FeedPump updateFeedPump(Long id,FeedPumpRequest updatedFeedPumpRequeset);
-//    void deleteFeedPump(Long id);
-
     void deleteFeedPumpById(Long id);
+
+    FeedPumpResponse updateFeedPump(Long id, FeedPumpRequest feedPumpRequest);
+
+    FeedPumpResponse getPump(Long id);
+
+    List<FeedPumpResponse> getAllPump();
 }

@@ -85,7 +85,6 @@ public class InputServiceImpl implements InputService {
 
             Double calcChamber = Math.ceil((totalWetCake / (noOfPress * noOfBatch)) / onePlateVolume);
             int noOfChamber = roundUpToEven(calcChamber);
-//            int validNoOfChamber = (noOfChamber<=press.getMaxChamber()) ? noOfChamber : 0;
 
             int totalVolume = noOfChamber * onePlateVolume;
 

@@ -80,4 +80,20 @@ public class SqPumpServiceImpl implements SqPumpService {
 
         return sqPumpMapper.entityToRes(updateSqPump);
     }
+
+    @Override
+    public SqPumpResponse getSqPump(Long id) {
+        SqPump sqPump = sqPumpRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotExistsException("Sq Pump not exists"));
+        return sqPumpMapper.entityToRes(sqPump);
+    }
+
+    @Override
+    public String deleteSqPump(Long id) {
+        SqPump sqPump = sqPumpRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotExistsException("Sq Pump not exists"));
+
+        sqPumpRepository.deleteById(id);
+        return "Delete pump successfully";
+    }
 }

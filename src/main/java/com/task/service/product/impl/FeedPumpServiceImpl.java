@@ -2,7 +2,9 @@ package com.task.service.product.impl;
 
 import com.task.dto.productRequest.FeedPumpRequest;
 import com.task.dto.response.FeedPumpResponse;
+import com.task.entities.product.ChamberRange;
 import com.task.entities.product.FeedPump;
+import com.task.entities.product.SqCalcFR;
 import com.task.exception.AlreadyExistsException;
 import com.task.exception.BadRequestException;
 import com.task.mapper.FeedPumpMapper;
@@ -55,6 +57,45 @@ public class FeedPumpServiceImpl implements FeedPumpService {
             throw new BadRequestException("FeedPump with press size " + id + " does not exist.");
         }
         feedPumpRepository.deleteById(id);
+    }
+
+    @Override
+    public FeedPumpResponse updateFeedPump(Long id, FeedPumpRequest feedPumpRequest) {
+        FeedPump feedPump = feedPumpRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("FeedPump with press size " + id + " does not exist."));
+
+        feedPump.setPressSize((feedPumpRequest.getPressSize() == null) ? feedPump.getPressSize() : feedPumpRequest.getPressSize());
+
+        if (feedPumpRequest.getChamberRanges() != null) {
+
+
+            feedPump.getChamberRanges().clear();
+
+            feedPumpRequest.getChamberRanges().forEach(flowRateReq -> {
+                ChamberRange chamberRange = new ChamberRange();
+                chamberRange.setRangeLabel(flowRateReq.getRangeLabel());
+                chamberRange.setFlowRate(flowRateReq.getFlowRate());
+                chamberRange.setFeedPump(feedPump);
+                feedPump.getChamberRanges().add(chamberRange);
+            });
+        }
+
+        FeedPump updatePump = feedPumpRepository.save(feedPump);
+        return feedPumpMapper.entityToResp(updatePump);
+    }
+
+    @Override
+    public FeedPumpResponse getPump(Long id) {
+        FeedPump feedPump = feedPumpRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("FeedPump with press size " + id + " does not exist."));
+        return feedPumpMapper.entityToResp(feedPump);
+    }
+
+    @Override
+    public List<FeedPumpResponse> getAllPump() {
+        List<FeedPump> feedPumpList = feedPumpRepository.findAll();
+
+        return feedPumpMapper.entityToResp(feedPumpList);
     }
 
     private void validateChamberRanges(FeedPumpRequest feedPumpRequest) {

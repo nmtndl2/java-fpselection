@@ -12,4 +12,8 @@ public interface SqPumpService {
     List<SqPump> getAll();
 
     SqPumpResponse updateSqPump(Long id, SqPumpRequest sqPumpRequest);
+
+    SqPumpResponse getSqPump(Long id);
+
+    String deleteSqPump(Long id);
 }
