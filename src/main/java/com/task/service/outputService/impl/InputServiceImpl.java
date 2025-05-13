@@ -82,19 +82,21 @@ public class InputServiceImpl implements InputService {
             SqPump sqPump = sqPumpRepository.findByPressSize(pressSize);
             List<Double> flowRates = sqPump.getFlowRates().stream()
                     .map(SqCalcFR::getFlowRate)
+                    .sorted()
                     .toList();
+            log.info("flowRates : {}", flowRates);
 
             Double selectedFlowRate = null;
             for (Double rate : flowRates) {
-                if ((sqWaterUsed / rate) >= sqPump.getSqMaxTMin()) {
+                if (((sqWaterUsed) / (rate * 1000 /60)) <= sqPump.getSqMaxTMin()) {
                     selectedFlowRate = rate;
                     break;
                 }
             }
 
-            sqPump.setSqFlowRate(selectedFlowRate);
+            Double sqFlowRate = selectedFlowRate;
+            log.info("sqFlowRate : {}", sqFlowRate);
 
-            Double setCwTankCap = sqPump.getSqMaxTMin();
             int sqTankCap = sqWaterUsed + (int) (sqWaterUsed * 0.3);
 
             long pumpOnSeconds =
@@ -120,7 +122,7 @@ public class InputServiceImpl implements InputService {
             pressData.setFeedPumpFlow(feedPumpFlow);
             pressData.setAirCompressDeli(airCompressDeli);
 
-            pressData.setSqFlowRate(null);
+            pressData.setSqFlowRate(sqFlowRate);
             pressData.setSqWaterUsed(sqWaterUsed);
             pressData.setSqTankCap(sqTankCap);
 
