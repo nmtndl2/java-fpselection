@@ -21,13 +21,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String>  Register(@Valid @RequestBody UserRequestDTO userDto) {
-        Users registeredUser = authService.Register(userDto);
+        Users registeredUser = authService.register(userDto);
         return ResponseEntity.ok("User registered successfully with email : " + registeredUser.getEmail() ) ;
     }
 
     @PostMapping("/login")
     public String Login(@RequestBody Users users) {
-        authService.Login(users);
+        authService.login(users);
         return  jwtUtil.generateToken(users.getEmail());
     }
 }

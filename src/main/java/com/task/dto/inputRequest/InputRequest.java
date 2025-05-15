@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalTime;
 
@@ -30,7 +31,7 @@ public class InputRequest {
     @NotNull(message = "DrySolid particle is required")
     private double drySolidParticle;
 
-    private double densityOfDrySolid;
+    private Double densityOfDrySolid;
 
     @NotNull(message = "Moisture Contain is required")
     private double moistureContain;
@@ -43,10 +44,5 @@ public class InputRequest {
     private LocalTime washingT;
     private LocalTime sqOutletT;
 
-
-    //Below Variable set on customize
-//    private String pressSize;
-//    private String plateType;
-//    private String washingT;
-//    private double cusFeedRate;
+    private boolean cakeWashing;
 }

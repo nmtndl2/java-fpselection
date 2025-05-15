@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private JwtUtil jwtService;
 
     @Override
-    public Users Register(UserRequestDTO usersDto) {
+    public Users register(UserRequestDTO usersDto) {
         if (usersRepository.findByEmail(usersDto.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("User already exists with email: " + usersDto.getEmail());
         }
@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String Login(Users users) {
+    public String login(Users users) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(users.getEmail(), users.getPassword()));
 
         if (authentication.isAuthenticated()) {

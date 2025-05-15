@@ -13,6 +13,8 @@ import com.task.service.product.PlateTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PlateTypeServiceImpl implements PlateTypeService {
@@ -46,5 +48,10 @@ public class PlateTypeServiceImpl implements PlateTypeService {
 
         plateTypeRepository.delete(plateType);
         return "Plate type successfully deleted";
+    }
+
+    @Override
+    public List<PlateType> findAll() {
+        return plateTypeRepository.findAll();
     }
 }

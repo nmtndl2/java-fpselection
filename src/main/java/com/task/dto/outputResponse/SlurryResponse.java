@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SlurryResponse {
-    private double totalDrySolid;
-    private double totalWetCake;
+    private int totalDrySolid;
+    private int totalWetCake;
 }

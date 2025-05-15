@@ -39,9 +39,9 @@ public class InputServiceImpl implements InputService {
         List<PressTResponse> pressTResponses = new ArrayList<>();
 
         // SlurryResponse calculation
-        double finalDensity = inputRequest.getDensityOfDrySolid() == 0 ? 1 : inputRequest.getDensityOfDrySolid();
-        double totalDrySolid = (inputRequest.getSludgeQty() * inputRequest.getDrySolidParticle()) / finalDensity;
-        double totalWetCake= totalDrySolid * (100 / (100 - inputRequest.getMoistureContain()));
+        double finalDensity = inputRequest.getDensityOfDrySolid() == null ? 1 : inputRequest.getDensityOfDrySolid();
+        int totalDrySolid = (int) ((inputRequest.getSludgeQty() * 1000 * inputRequest.getDrySolidParticle() /100) / finalDensity);
+        int totalWetCake= (int) (totalDrySolid * (100 / (100 - inputRequest.getMoistureContain())));
 
         SlurryResponse slurryResponse = new SlurryResponse();
         slurryResponse.setTotalDrySolid(totalDrySolid);
@@ -83,12 +83,12 @@ public class InputServiceImpl implements InputService {
             int noOfPress = (inputRequest.getNoOfPress() == 0) ? 1 : inputRequest.getNoOfPress();
             int noOfBatch = (inputRequest.getNoOfBatch() == 0) ? 1 : inputRequest.getNoOfBatch();
 
-            Double calcChamber = Math.ceil((totalWetCake / (noOfPress * noOfBatch)) / onePlateVolume);
+            double calcChamber = Math.ceil((totalWetCake / (noOfPress * noOfBatch)) / onePlateVolume);
             int noOfChamber = roundUpToEven(calcChamber);
 
             int totalVolume = noOfChamber * onePlateVolume;
 
-            Integer feedPumpFlow;
+            int feedPumpFlow;
             if (!(noOfChamber > press.getMaxChamber())) {
                 feedPumpFlow = getFlowRateByChamberCount(pressSize, noOfChamber);
             } else {
@@ -173,8 +173,13 @@ public class InputServiceImpl implements InputService {
             }
 
             if (!"Membrane".equalsIgnoreCase(inputRequest.getPlateType())) {
+                pressData.setSqFlowRate(null);
                 pressData.setSqWaterUsed(null);
                 pressData.setSqTankCap(null);
+            }
+
+            if ("Membrane".equalsIgnoreCase(inputRequest.getPlateType())) {
+                pressData.setAirCompressDeli(null);
             }
 
             responseList.add(pressData);
@@ -254,6 +259,33 @@ public class InputServiceImpl implements InputService {
             pressT.setOnePlateCwT(onePlateCwT);
             pressT.setOnCycleCwT(onCycleCwT);
             pressT.setCakeWT(cakeWT);
+
+            if (noOfChamber > press.getMaxChamber()) {
+                String msg = String.format(
+                        "Calculated number of chambers (%d) exceeds the press's maximum capacity (%d).",
+                        noOfChamber, press.getMaxChamber()
+                );
+                pressT.setMessage(msg);
+                pressT.setPressingCT(null);
+                pressT.setFeedT(null);
+                pressT.setCakeAirT(null);
+                pressT.setSqInletT(null);
+                pressT.setSqOutletT(null);
+                pressT.setOnePlatePsT(null);
+                pressT.setOnCyclePsT(null);
+                pressT.setOnePlateCwT(null);
+                pressT.setOnCycleCwT(null);
+                pressT.setCakeWT(null);
+            }
+
+            if (!"Membrane".equalsIgnoreCase(inputRequest.getPlateType())) {
+                pressT.setSqInletT(null);
+                pressT.setSqOutletT(null);
+            }
+
+            if ("Membrane".equalsIgnoreCase(inputRequest.getPlateType())) {
+                pressT.setCakeAirT(null);
+            }
 
             pressTResponses.add(pressT);
         }
