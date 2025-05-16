@@ -2,6 +2,7 @@ package com.task.controller.product;
 
 import com.task.dto.productRequest.PlateRequest;
 import com.task.dto.response.PlateResponse;
+import com.task.entities.product.Plate;
 import com.task.entities.product.PlateType;
 import com.task.repository.product.PlateTypeRepository;
 import com.task.service.product.PlateService;
@@ -42,5 +43,10 @@ public class PlateController {
     @DeleteMapping("/delete/{plateId}")
     public ResponseEntity<String> deleteById(@PathVariable Long plateId){
         return ResponseEntity.ok(plateService.deleteById(plateId));
+    }
+
+    @GetMapping("/fetch/presssize")
+    public ResponseEntity<List<String>> getPressSizeByPlateType(@RequestParam String plateType) {
+        return ResponseEntity.ok(plateService.getPressSizeByPlateType(plateType));
     }
 }

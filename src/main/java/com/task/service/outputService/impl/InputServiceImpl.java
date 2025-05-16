@@ -6,6 +6,7 @@ import com.task.dto.outputResponse.PressDataResponse;
 import com.task.dto.outputResponse.PressTResponse;
 import com.task.dto.outputResponse.SlurryResponse;
 import com.task.entities.product.*;
+import com.task.exception.DataNotFoundException;
 import com.task.repository.product.FeedPumpRepository;
 import com.task.repository.product.PlateRepository;
 import com.task.repository.product.PressRepository;
@@ -30,9 +31,21 @@ public class InputServiceImpl implements InputService {
     private final SqPumpRepository sqPumpRepository;
     private final FeedPumpRepository feedPumpRepository;
 
+    private static final double AIR_COMPRESS_DIVISOR = 28.28;
+    private static final LocalTime SQ_OUTLET_DEFAULT_TIME = LocalTime.parse("00:20:00");
+
+
     @Override
     public DashboardResponse calculateDashboardData(InputRequest inputRequest) {
-        List<String> pressSizes = plateRepository.findDistinctPressSizeByPlateType(inputRequest.getPlateType());
+//        List<String> pressSizes = plateRepository.findDistinctPressSizeByPlateType(inputRequest.getPlateType());
+
+//        List<String> pressSizes = plateRepository.findAll().stream()
+//                .map(Plate::getPressSize)
+//                .distinct()
+//                .toList();
+
+        List<String> pressSizes = inputRequest.getPressSizes();
+
         List<String> warnings = new ArrayList<>();
 
         List<PressDataResponse> responseList = new ArrayList<>();
@@ -83,21 +96,22 @@ public class InputServiceImpl implements InputService {
             int noOfPress = (inputRequest.getNoOfPress() == 0) ? 1 : inputRequest.getNoOfPress();
             int noOfBatch = (inputRequest.getNoOfBatch() == 0) ? 1 : inputRequest.getNoOfBatch();
 
-            double calcChamber = Math.ceil((totalWetCake / (noOfPress * noOfBatch)) / onePlateVolume);
+            double calcChamber = Math.ceil((double) (totalWetCake / (noOfPress * noOfBatch)) / onePlateVolume);
             int noOfChamber = roundUpToEven(calcChamber);
+            log.info("noOfChamber : {}", noOfChamber);
 
             int totalVolume = noOfChamber * onePlateVolume;
 
             int feedPumpFlow;
             if (!(noOfChamber > press.getMaxChamber())) {
-                feedPumpFlow = getFlowRateByChamberCount(pressSize, noOfChamber);
+                feedPumpFlow = (inputRequest.getCusFeedRate() == null) ? getFlowRateByChamberCount(pressSize, noOfChamber) : inputRequest.getCusFeedRate();
             } else {
                 feedPumpFlow = 1;
             }
 
-            int airCompressDeli = (int) Math.ceil(totalVolume / 28.28);
+            int airCompressDeli = (int) Math.ceil(totalVolume / AIR_COMPRESS_DIVISOR);
 
-            int sqInletWater = sqPumpRepository.findByPressSize(pressSize).getSqInletWater();
+            int sqInletWater = sqPump.getSqInletWater();
             int sqWaterUsed = sqInletWater * (noOfChamber / 2);
 
             List<Double> flowRates = sqPump.getFlowRates().stream()
@@ -113,12 +127,11 @@ public class InputServiceImpl implements InputService {
                 }
             }
 
-            Double sqFlowRate = selectedFlowRate;
+            double sqFlowRate = !(noOfChamber > press.getMaxChamber()) ? selectedFlowRate : 0;
             log.info("sqFlowRate : {}", sqFlowRate);
 
             int calcSqTankCap = sqWaterUsed + (int) (sqWaterUsed * 0.3);
             int sqTankCap = roundUpToNextHundred(calcSqTankCap);
-
 
             long pumpOnSeconds =
                     press.getCwFwdT().toSecondOfDay() +
@@ -172,14 +185,19 @@ public class InputServiceImpl implements InputService {
                 pressData.setMessage(null);
             }
 
-            if (!"Membrane".equalsIgnoreCase(inputRequest.getPlateType())) {
+            String plateType = inputRequest.getPlateType();
+            if ("Membrane".equalsIgnoreCase(plateType)){
+                pressData.setAirCompressDeli(null);
+            } else {
                 pressData.setSqFlowRate(null);
                 pressData.setSqWaterUsed(null);
                 pressData.setSqTankCap(null);
             }
 
-            if ("Membrane".equalsIgnoreCase(inputRequest.getPlateType())) {
-                pressData.setAirCompressDeli(null);
+            if (!inputRequest.isClothWashing()){
+                pressData.setCw1PWaterUsed(null);
+                pressData.setCw1CWaterUsed(null);
+                pressData.setCwTankCap(null);
             }
 
             responseList.add(pressData);
@@ -197,8 +215,8 @@ public class InputServiceImpl implements InputService {
             Duration feedTime = Duration.ofSeconds(feedTimeSeconds);
             LocalTime feedT = LocalTime.MIDNIGHT.plus(feedTime);
 
-            // Air Time (Duration)
-            LocalTime cakeWT = inputRequest.getWashingT();
+            // Cake Washing Time (Duration)
+            LocalTime cakeWT = (inputRequest.isCakeWashing()) ? inputRequest.getWashingT() : null;
 
             // Air Time (Duration)
             LocalTime cakeAirT = press.getCakeAirT();
@@ -209,7 +227,7 @@ public class InputServiceImpl implements InputService {
             LocalTime sqInletT = LocalTime.MIDNIGHT.plus(sqInletTime);
 
             LocalTime sqOutletT = (inputRequest.getSqOutletT() == null)
-                    ? LocalTime.parse("00:20:00")
+                    ? SQ_OUTLET_DEFAULT_TIME
                     : inputRequest.getSqOutletT();
 
             // Plate Shifter Time (Duration)
@@ -248,46 +266,50 @@ public class InputServiceImpl implements InputService {
             Duration onCycleCwTime = Duration.ofSeconds(onCycleCwTimeSecond);
             LocalTime onCycleCwT = LocalTime.MIDNIGHT.plus(onCycleCwTime);
 
-            PressTResponse pressT = new PressTResponse();
-            pressT.setPressingCT(pressingCT);
-            pressT.setFeedT(feedT);
-            pressT.setCakeAirT(cakeAirT);
-            pressT.setSqInletT(sqInletT);
-            pressT.setSqOutletT(sqOutletT);
-            pressT.setOnePlatePsT(onePlatePsT);
-            pressT.setOnCyclePsT(onCyclePsT);
-            pressT.setOnePlateCwT(onePlateCwT);
-            pressT.setOnCycleCwT(onCycleCwT);
-            pressT.setCakeWT(cakeWT);
+            PressTResponse pressTimeResponse = new PressTResponse();
+            pressTimeResponse.setPressingCT(pressingCT);
+            pressTimeResponse.setFeedT(feedT);
+            pressTimeResponse.setCakeAirT(cakeAirT);
+            pressTimeResponse.setSqInletT(sqInletT);
+            pressTimeResponse.setSqOutletT(sqOutletT);
+            pressTimeResponse.setOnePlatePsT(onePlatePsT);
+            pressTimeResponse.setOnCyclePsT(onCyclePsT);
+            pressTimeResponse.setOnePlateCwT(onePlateCwT);
+            pressTimeResponse.setOnCycleCwT(onCycleCwT);
+            pressTimeResponse.setCakeWT(cakeWT);
 
             if (noOfChamber > press.getMaxChamber()) {
                 String msg = String.format(
                         "Calculated number of chambers (%d) exceeds the press's maximum capacity (%d).",
                         noOfChamber, press.getMaxChamber()
                 );
-                pressT.setMessage(msg);
-                pressT.setPressingCT(null);
-                pressT.setFeedT(null);
-                pressT.setCakeAirT(null);
-                pressT.setSqInletT(null);
-                pressT.setSqOutletT(null);
-                pressT.setOnePlatePsT(null);
-                pressT.setOnCyclePsT(null);
-                pressT.setOnePlateCwT(null);
-                pressT.setOnCycleCwT(null);
-                pressT.setCakeWT(null);
+                pressTimeResponse.setMessage(msg);
+                pressTimeResponse.setPressingCT(null);
+                pressTimeResponse.setFeedT(null);
+                pressTimeResponse.setCakeAirT(null);
+                pressTimeResponse.setSqInletT(null);
+                pressTimeResponse.setSqOutletT(null);
+                pressTimeResponse.setOnePlatePsT(null);
+                pressTimeResponse.setOnCyclePsT(null);
+                pressTimeResponse.setOnePlateCwT(null);
+                pressTimeResponse.setOnCycleCwT(null);
+                pressTimeResponse.setCakeWT(null);
             }
 
-            if (!"Membrane".equalsIgnoreCase(inputRequest.getPlateType())) {
-                pressT.setSqInletT(null);
-                pressT.setSqOutletT(null);
+            if ("Membrane".equalsIgnoreCase(plateType)) {
+                pressTimeResponse.setCakeAirT(null);
+            } else {
+                pressTimeResponse.setSqInletT(null);
+                pressTimeResponse.setSqOutletT(null);
             }
 
-            if ("Membrane".equalsIgnoreCase(inputRequest.getPlateType())) {
-                pressT.setCakeAirT(null);
+            if (!inputRequest.isClothWashing()){
+                pressTimeResponse.setOnePlateCwT(null);
+                pressTimeResponse.setOnCycleCwT(null);
+                pressTimeResponse.setCakeWT(null);
             }
 
-            pressTResponses.add(pressT);
+            pressTResponses.add(pressTimeResponse);
         }
 
         // Build and return DashboardResponse
@@ -303,7 +325,7 @@ public class InputServiceImpl implements InputService {
     // Feed Pump Selection Method
     public int getFlowRateByChamberCount(String pressSize, int noOfChamber) {
         FeedPump feedPump = feedPumpRepository.findByPressSize(pressSize)
-                .orElseThrow(() -> new RuntimeException("FeedPump not found for press size: " + pressSize));
+                .orElseThrow(() -> new DataNotFoundException("FeedPump not found for press size: " + pressSize));
 
         for (ChamberRange range : feedPump.getChamberRanges()) {
             String[] parts = range.getRangeLabel().split("-");

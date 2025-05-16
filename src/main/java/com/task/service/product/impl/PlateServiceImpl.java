@@ -12,8 +12,10 @@ import com.task.service.product.PlateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,5 +88,27 @@ public class PlateServiceImpl implements PlateService {
 
         return "Plate successfully deleted";
     }
+
+    @Override
+    public List<String> getPressSizeByPlateType(String plateType) {
+        return plateRepository.findAll().stream()
+                .filter(plate -> plate.getPlateType().equalsIgnoreCase(plateType))
+                .map(Plate::getPressSize)
+                .distinct()
+                .sorted(Comparator.comparingInt(this::getArea))
+                .toList();
+    }
+
+    private int getArea(String size) {
+        try {
+            String[] parts = size.toLowerCase().split("x");
+            int width = Integer.parseInt(parts[0].trim());
+            int height = Integer.parseInt(parts[1].trim());
+            return width * height;
+        } catch (Exception e) {
+            return Integer.MAX_VALUE;
+        }
+    }
+
 
 }

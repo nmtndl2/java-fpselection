@@ -31,7 +31,7 @@ public class PlateTypeController {
     }
 
     @GetMapping("/fetch")
-    public List<PlateType> getAllPlateTypes() {
-        return plateTypeService.findAll();
+    public ResponseEntity<List<PlateType>> getAllPlateTypes() {
+        return ResponseEntity.ok(plateTypeService.findAll());
     }
 }

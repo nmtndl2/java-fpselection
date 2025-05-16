@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -44,5 +44,10 @@ public class InputRequest {
     private LocalTime washingT;
     private LocalTime sqOutletT;
 
+    private Integer cusFeedRate;
+
+    private List<String> pressSizes;
+
     private boolean cakeWashing;
+    private boolean clothWashing;
 }
