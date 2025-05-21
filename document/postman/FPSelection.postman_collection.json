@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pressSize\": \"1000 x 1000\",\n    \"maxChamber\": 70,\n    \"cakeAirT\": \"02:00:00\",\n    \"cyFwdT\": \"00:02:30\",\n    \"cyRevT\": \"00:02:00\",\n    \"dtAvailable\": true,\n    \"dtOpenT\": \"00:00:10\",\n    \"dtClosedT\": \"00:00:10\",\n    \"psAvailable\": true,\n    \"psFwdFPlateT\": \"00:00:18\",\n    \"psFwdT\": \"00:00:07\",\n    \"psFwdDT\": \"00:00:03\",\n    \"psRevT\": \"00:00:07\",\n    \"psRevDT\": \"00:00:03\",\n    \"cwAvailable\": true,\n    \"cwFwdT\": \"00:00:22\",\n    \"cwFwdDT\": \"00:00:03\",\n    \"cwRevT\": \"00:00:22\",\n    \"cwRevDT\": \"00:00:03\",\n    \"cwDownT\": \"00:00:12\",\n    \"cwDownDT\": \"00:00:03\",\n    \"cwUpT\": \"00:00:08\",\n    \"cwUpDT\": \"00:00:32\",\n    \"cwFlowRate\": 10.0\n  }",
+							"raw": "{\n    \"pressSize\": \"1500 x 1500\",\n    \"maxChamber\": 100,\n    \"cakeAirT\": \"02:00:00\",\n    \"cyFwdT\": \"00:02:30\",\n    \"cyRevT\": \"00:02:00\",\n    \"dtAvailable\": true,\n    \"dtOpenT\": \"00:00:10\",\n    \"dtClosedT\": \"00:00:10\",\n    \"psAvailable\": true,\n    \"psFwdFPlateT\": \"00:00:18\",\n    \"psFwdT\": \"00:00:07\",\n    \"psFwdDT\": \"00:00:03\",\n    \"psRevT\": \"00:00:07\",\n    \"psRevDT\": \"00:00:03\",\n    \"cwAvailable\": true,\n    \"cwFwdT\": \"00:00:22\",\n    \"cwFwdDT\": \"00:00:03\",\n    \"cwRevT\": \"00:00:22\",\n    \"cwRevDT\": \"00:00:03\",\n    \"cwDownT\": \"00:00:12\",\n    \"cwDownDT\": \"00:00:03\",\n    \"cwUpT\": \"00:00:08\",\n    \"cwUpDT\": \"00:00:32\",\n    \"cwFlowRate\": 10.0\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -83,7 +83,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"cwUpDT\": \"00:00:32\",\r\n        \"cwFlowRate\": 10\r\n    }",
+							"raw": "{\r\n        \"pressSize\": \"800 x 800\"\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,7 +91,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/press/updatePress/7",
+							"raw": "http://localhost:8081/api/press/updatePress/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -101,7 +101,7 @@
 								"api",
 								"press",
 								"updatePress",
-								"7"
+								"1"
 							]
 						}
 					},
@@ -165,7 +165,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pressSize\": \"800 x 800\",\n    \"plateType\": \"Recessed\",\n    \"volume\": 20,\n    \"filtrationArea\": 1.5,\n    \"cakeThk\": 35,\n    \"finalCakeThk\": 30\n  }",
+							"raw": "{\n    \"pressSize\": \"910 x 910\",\n    \"plateType\": \"Recessed\",\n    \"volume\": 25,\n    \"filtrationArea\": 1.35,\n    \"cakeThk\": 30,\n    \"finalCakeThk\": 25\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -327,6 +327,34 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Press Size By Plate type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/plate/fetch/presssize?plateType=Membrane",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"plate",
+								"fetch",
+								"presssize"
+							],
+							"query": [
+								{
+									"key": "plateType",
+									"value": "Membrane"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -345,7 +373,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"typeName\": \"Membrane\"\n}",
+							"raw": "{\n    \"typeName\": \"CGR\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -412,7 +440,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pressSize\": \"1000 x 1000\",\n    \"chamberRanges\": [\n        {\n        \"rangeLabel\": \"0-30\",\n        \"flowRate\": 5\n        },\n        {\n        \"rangeLabel\": \"31-60\",\n        \"flowRate\": 10\n        }\n\n    ]\n}",
+							"raw": "{\n    \"pressSize\": \"1500 x 1500\",\n    \"chamberRanges\": [\n        {\n        \"rangeLabel\": \"0-30\",\n        \"flowRate\": 10\n        },\n        {\n        \"rangeLabel\": \"31-60\",\n        \"flowRate\": 30\n        },\n        {\n        \"rangeLabel\": \"61-80\",\n        \"flowRate\": 40\n        },\n        {\n        \"rangeLabel\": \"81-100\",\n        \"flowRate\": 60\n        }\n\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -472,7 +500,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n        \"pressSize\": \"1000 x 1000\",\n        \"sqMaxTMin\": 25,\n        \"sqInletWater\": 40,\n        \"flowRates\": [\n          {\n            \"flowRate\": 2.0\n          },\n          {\n            \"flowRate\":2.8\n          },\n          {\n            \"flowRate\": 4.0\n          },\n          {\n            \"flowRate\": 5.0\n          },\n          {\n            \"flowRate\": 8.0\n          }\n        ]\n      }",
+							"raw": "{\n        \"pressSize\": \"1500 x 1500\",\n        \"sqMaxTMin\": 25,\n        \"sqInletWater\": 55,\n        \"flowRates\": [\n          {\n            \"flowRate\": 2.0\n          },\n          {\n            \"flowRate\":2.8\n          },\n          {\n            \"flowRate\": 4.0\n          },\n          {\n            \"flowRate\": 5.0\n          },\n          {\n            \"flowRate\": 8.0\n          }\n        ]\n      }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -564,7 +592,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"clientName\": \"Acme Corp\",\n    \"clientRef\" : \"Export\",\n    \"sludgeName\": \"Industrial Sludge\",\n    \"sludgeType\": \"Type A\",\n    \"sludgeQty\": 200,\n    \"drySolidParticle\": 10,\n    \"densityOfDrySolid\": 1,\n    \"moistureContain\": 50,\n    \"noOfPress\": 1,\n    \"noOfBatch\": 20,\n    \"plateType\": \"Membrane\",\n    \"washingT\": \"02:00:00\",\n    \"sqOutletT\": \"00:25:00\",\n    \"cusFeedRate\": 15\n}\n",
+							"raw": "{\n    \"clientName\": \"Acme Corp\",\n    \"clientRef\" : \"Export\",\n    \"sludgeName\": \"Industrial Sludge\",\n    \"sludgeType\": \"Type A\",\n    \"sludgeQty\": 200,\n    \"drySolidParticle\": 10,\n    \"densityOfDrySolid\": 1,\n    \"moistureContain\": 60,\n    \"noOfPress\": 1,\n    \"noOfBatch\": 10,\n    \"plateType\": \"Membrane\",\n    \"washingT\": \"02:00:00\",\n    \"sqOutletT\": \"00:25:00\",\n    \"cusFeedRate\": 15,\n    \"clothWashing\" : true\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"

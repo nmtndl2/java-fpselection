@@ -30,6 +30,12 @@ public class PressServiceImpl implements PressService {
             throw new ResourceNotExistsException("Press size is already exists");
         }
 
+        if (pressRequest.getCwAvailable()) {
+            if (!(pressRequest.getPsAvailable() && pressRequest.getDtAvailable())) {
+                throw new IllegalArgumentException("When CW is available, both PS and DT must also be available.");
+            }
+        }
+
         Press press = pressRepository.save(pressMapper.reqToEntity(pressRequest));
         return pressMapper.entityToRes(press);
     }
