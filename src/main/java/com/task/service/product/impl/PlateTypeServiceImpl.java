@@ -1,6 +1,7 @@
 package com.task.service.product.impl;
 
 import com.task.dto.productRequest.PlateTypeRequest;
+import com.task.dto.response.PlateResponse;
 import com.task.dto.response.PlateTypeResponse;
 import com.task.entities.product.Plate;
 import com.task.entities.product.PlateType;
@@ -70,6 +71,13 @@ public class PlateTypeServiceImpl implements PlateTypeService {
                 .toList();
 
         return memPlateSizeList;
+    }
+
+    @Override
+    public List<PlateTypeResponse> getAll() {
+        List<PlateType> plateTypes = plateTypeRepository.findAll();
+        List<PlateTypeResponse> plateTypeResponses = plateTypeMapper.entityToResp(plateTypes);
+        return plateTypeResponses;
     }
 
     private int getArea(String size) {

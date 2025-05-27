@@ -30,6 +30,11 @@ public class PlateTypeController {
         return ResponseEntity.ok(plateTypeService.deletePlateType(plateTypeId));
     }
 
+    @GetMapping("/getall")
+    public ResponseEntity<List<PlateTypeResponse>> getAll() {
+        return ResponseEntity.ok(plateTypeService.getAll());
+    }
+
     @GetMapping("/fetch")
     public ResponseEntity<List<PlateType>> getAllPlateTypes() {
         return ResponseEntity.ok(plateTypeService.findAll());

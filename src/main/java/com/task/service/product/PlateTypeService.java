@@ -16,4 +16,5 @@ public interface PlateTypeService {
 
     List<String> getMemPlateSize();
 
+    List<PlateTypeResponse> getAll();
 }

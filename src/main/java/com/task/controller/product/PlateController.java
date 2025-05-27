@@ -2,9 +2,6 @@ package com.task.controller.product;
 
 import com.task.dto.productRequest.PlateRequest;
 import com.task.dto.response.PlateResponse;
-import com.task.entities.product.Plate;
-import com.task.entities.product.PlateType;
-import com.task.repository.product.PlateTypeRepository;
 import com.task.service.product.PlateService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
