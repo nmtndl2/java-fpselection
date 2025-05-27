@@ -20,4 +20,5 @@ public interface PlateService {
 
     List<String> getPressSizeByPlateType(String plateType);
 
+    List<String> findAllPressSize();
 }

@@ -13,4 +13,7 @@ public interface PlateTypeService {
     String deletePlateType(Long plateTypeId);
 
     List<PlateType> findAll();
+
+    List<String> getMemPlateSize();
+
 }

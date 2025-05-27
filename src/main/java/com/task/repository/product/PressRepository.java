@@ -13,9 +13,6 @@ import java.util.Optional;
 public interface PressRepository extends JpaRepository<Press, Long> {
     boolean existsByPressSize(String pressSize);
 
-    @Query("SELECT DISTINCT p.pressSize FROM Press p")
-    List<String> findAllPressSizes();
-
     Press findByPressSize(String pressSize);
 
     @Query("SELECT p.maxChamber FROM Press p WHERE p.pressSize = :pressSize")

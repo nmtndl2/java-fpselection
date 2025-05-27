@@ -99,6 +99,15 @@ public class PlateServiceImpl implements PlateService {
                 .toList();
     }
 
+    @Override
+    public List<String> findAllPressSize() {
+        return plateRepository.findAll().stream()
+                .map(Plate::getPressSize)
+                .distinct()
+                .sorted(Comparator.comparingInt(this::getArea))
+                .toList();
+    }
+
     private int getArea(String size) {
         try {
             String[] parts = size.toLowerCase().split("x");

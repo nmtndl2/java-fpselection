@@ -2,6 +2,7 @@ package com.task.service.product.impl;
 
 import com.task.dto.productRequest.PlateTypeRequest;
 import com.task.dto.response.PlateTypeResponse;
+import com.task.entities.product.Plate;
 import com.task.entities.product.PlateType;
 import com.task.exception.AlreadyExistsException;
 import com.task.exception.BadRequestException;
@@ -13,6 +14,7 @@ import com.task.service.product.PlateTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -53,5 +55,31 @@ public class PlateTypeServiceImpl implements PlateTypeService {
     @Override
     public List<PlateType> findAll() {
         return plateTypeRepository.findAll();
+    }
+
+    @Override
+    public List<String> getMemPlateSize() {
+
+        String plateType = "Membrane";
+
+        List<String> memPlateSizeList = plateRepository.findAll().stream()
+                .filter(plate -> plateType.equalsIgnoreCase(plate.getPlateType()))
+                .map(Plate::getPressSize)
+                .distinct()
+                .sorted(Comparator.comparingInt(this::getArea))
+                .toList();
+
+        return memPlateSizeList;
+    }
+
+    private int getArea(String size) {
+        try {
+            String[] parts = size.toLowerCase().split("x");
+            int width = Integer.parseInt(parts[0].trim());
+            int height = Integer.parseInt(parts[1].trim());
+            return width * height;
+        } catch (Exception e) {
+            return Integer.MAX_VALUE;
+        }
     }
 }

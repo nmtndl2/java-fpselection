@@ -49,4 +49,9 @@ public class PlateController {
     public ResponseEntity<List<String>> getPressSizeByPlateType(@RequestParam String plateType) {
         return ResponseEntity.ok(plateService.getPressSizeByPlateType(plateType));
     }
+
+    @GetMapping("/fetchAllPressSize")
+    public ResponseEntity<List<String>> getAllPressSize() {
+        return ResponseEntity.ok(plateService.findAllPressSize());
+    }
 }

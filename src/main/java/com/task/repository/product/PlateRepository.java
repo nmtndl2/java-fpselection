@@ -15,8 +15,5 @@ public interface PlateRepository extends JpaRepository<Plate, Long> {
 
     Plate findByPressSizeAndPlateType(String pressSize, String plateType);
 
-    @Query("SELECT DISTINCT p.pressSize FROM Plate p WHERE p.plateType = ?1")
-    List<String> findDistinctPressSizeByPlateType(String plateType);
-
     boolean existsByPlateType(String plateType);
 }
