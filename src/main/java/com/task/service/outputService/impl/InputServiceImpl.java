@@ -7,10 +7,8 @@ import com.task.dto.outputResponse.PressTResponse;
 import com.task.dto.outputResponse.SlurryResponse;
 import com.task.entities.product.*;
 import com.task.exception.DataNotFoundException;
-import com.task.repository.product.FeedPumpRepository;
-import com.task.repository.product.PlateRepository;
-import com.task.repository.product.PressRepository;
-import com.task.repository.product.SqPumpRepository;
+import com.task.mapper.InputMapper;
+import com.task.repository.product.*;
 import com.task.service.outputService.InputService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +28,8 @@ public class InputServiceImpl implements InputService {
     private final PlateRepository plateRepository;
     private final SqPumpRepository sqPumpRepository;
     private final FeedPumpRepository feedPumpRepository;
+    private final InputRepository inputRepository;
+    private final InputMapper inputMapper;
 
     private static final double AIR_COMPRESS_DIVISOR = 28.28;
     private static final LocalTime SQ_OUTLET_DEFAULT_TIME = LocalTime.parse("00:20:00");
@@ -373,6 +373,8 @@ public class InputServiceImpl implements InputService {
         dashboardResponse.setPressTResponse(pressTResponses);
         dashboardResponse.setSlurryResponse(slurryResponse);
         dashboardResponse.setWarnings(warnings);
+
+        Input addInput = inputRepository.save(inputMapper.reqToEntity(inputRequest));
 
         return dashboardResponse;
     }
