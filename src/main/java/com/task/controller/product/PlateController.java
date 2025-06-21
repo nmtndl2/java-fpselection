@@ -52,3 +52,4 @@ public class PlateController {
         return ResponseEntity.ok(plateService.findAllPressSize());
     }
 }
+    

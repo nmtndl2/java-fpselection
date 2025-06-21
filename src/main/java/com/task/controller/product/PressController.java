@@ -33,7 +33,8 @@ public class PressController {
     }
 
     @PutMapping("/updatePress/{pressId}")
-    public ResponseEntity<PressResponse> updatePress(@PathVariable Long pressId, @RequestBody PressRequest pressRequest) {
+    public ResponseEntity<PressResponse> updatePress(
+            @PathVariable Long pressId, @RequestBody PressRequest pressRequest) {
         return ResponseEntity.ok(pressService.updatePress(pressId, pressRequest));
     }
 
@@ -42,5 +43,4 @@ public class PressController {
         pressService.deletePressById(pressId);
         return ResponseEntity.ok("Press with press size " + pressId + " deleted successfully.");
     }
-
 }

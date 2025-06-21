@@ -1,9 +1,5 @@
 package com.task.dto.response;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,17 +9,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlateResponse {
 
-    private long plateId;
+  private long plateId;
 
-    private String pressSize;
+  private String pressSize;
 
-    private String plateType;
+  private String plateType;
 
-    private int volume;
+  private int volume;
 
-    private double filtrationArea;
+  private double filtrationArea;
 
-    private int cakeThk;
+  private int cakeThk;
 
-    private int finalCakeThk;
+  private int finalCakeThk;
 }

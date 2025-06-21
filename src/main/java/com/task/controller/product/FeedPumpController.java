@@ -20,7 +20,8 @@ public class FeedPumpController {
     private final FeedPumpService feedPumpService;
 
     @PostMapping
-    public ResponseEntity<FeedPumpResponse> createFeedPump(@Valid @RequestBody FeedPumpRequest feedPumpRequest) {
+    public ResponseEntity<FeedPumpResponse> createFeedPump(
+            @Valid @RequestBody FeedPumpRequest feedPumpRequest) {
         return ResponseEntity.ok(feedPumpService.createFeedPump(feedPumpRequest));
     }
 
@@ -31,7 +32,8 @@ public class FeedPumpController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<FeedPumpResponse> updateFeedPump(@PathVariable Long id, @RequestBody FeedPumpRequest feedPumpRequest) {
+    public ResponseEntity<FeedPumpResponse> updateFeedPump(
+            @PathVariable Long id, @RequestBody FeedPumpRequest feedPumpRequest) {
         return ResponseEntity.ok(feedPumpService.updateFeedPump(id, feedPumpRequest));
     }
 
@@ -44,6 +46,4 @@ public class FeedPumpController {
     public ResponseEntity<List<FeedPumpResponse>> getAllPump() {
         return ResponseEntity.ok(feedPumpService.getAllPump());
     }
-
-
 }
