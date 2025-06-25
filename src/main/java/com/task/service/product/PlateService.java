@@ -2,8 +2,6 @@ package com.task.service.product;
 
 import com.task.dto.productRequest.PlateRequest;
 import com.task.dto.response.PlateResponse;
-import com.task.entities.product.Plate;
-import com.task.entities.product.PlateType;
 import jakarta.validation.Valid;
 
 import java.util.List;

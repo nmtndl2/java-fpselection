@@ -23,17 +23,22 @@ public class SqPumpServiceImpl implements SqPumpService {
     private final PlateRepository plateRepository;
     private final SqPumpMapper sqPumpMapper;
 
+    private static final String SQ_PUMP_NOT_EXIST = "Sq Pump not exists";
+
     @Override
     public SqPumpResponse addSqPump(SqPumpRequest sqPumpRequest) {
 
-        boolean existsByPressSize = sqPumpRepository.existsByPressSize(sqPumpRequest.getPressSize());
+        boolean existsByPressSize =
+                sqPumpRepository.existsByPressSize(sqPumpRequest.getPressSize());
         if (existsByPressSize) {
             throw new AlreadyExistsException("Already press size exist");
         }
 
         String plateType = "Membrane";
 
-        boolean isMembrane = plateRepository.existsByPressSizeAndPlateType(sqPumpRequest.getPressSize(), plateType);
+        boolean isMembrane =
+                plateRepository.existsByPressSizeAndPlateType(
+                        sqPumpRequest.getPressSize(), plateType);
 
         if (!isMembrane) {
             throw new ResourceNotExistsException("Plate not found in plate table");
@@ -57,24 +62,37 @@ public class SqPumpServiceImpl implements SqPumpService {
 
     @Override
     public SqPumpResponse updateSqPump(Long id, SqPumpRequest sqPumpRequest) {
-        SqPump sqPump = sqPumpRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotExistsException("Sq Pump not exists"));
+        SqPump sqPump =
+                sqPumpRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotExistsException(SQ_PUMP_NOT_EXIST));
 
-        sqPump.setPressSize((sqPumpRequest.getPressSize() == null) ? sqPump.getPressSize() : sqPumpRequest.getPressSize());
-        sqPump.setSqInletWater((sqPumpRequest.getSqInletWater() == null) ? sqPump.getSqInletWater() : sqPumpRequest.getSqInletWater());
-        sqPump.setSqMaxTMin((sqPumpRequest.getSqMaxTMin() == null) ? sqPump.getSqMaxTMin() : sqPumpRequest.getSqMaxTMin());
+        sqPump.setPressSize(
+                (sqPumpRequest.getPressSize() == null)
+                        ? sqPump.getPressSize()
+                        : sqPumpRequest.getPressSize());
+        sqPump.setSqInletWater(
+                (sqPumpRequest.getSqInletWater() == null)
+                        ? sqPump.getSqInletWater()
+                        : sqPumpRequest.getSqInletWater());
+        sqPump.setSqMaxTMin(
+                (sqPumpRequest.getSqMaxTMin() == null)
+                        ? sqPump.getSqMaxTMin()
+                        : sqPumpRequest.getSqMaxTMin());
 
-        if (sqPumpRequest.getFlowRates() != null) {
+        if (sqPumpRequest.getFlowRates() != null) {}
 
-        }
-            sqPump.getFlowRates().clear();
+        sqPump.getFlowRates().clear();
 
-            sqPumpRequest.getFlowRates().forEach(flowRateReq -> {
-                SqCalcFR sqCalcFR = new SqCalcFR();
-                sqCalcFR.setFlowRate(flowRateReq.getFlowRate());
-                sqCalcFR.setSqPump(sqPump);
-                sqPump.getFlowRates().add(sqCalcFR);
-            });
+        sqPumpRequest
+                .getFlowRates()
+                .forEach(
+                        flowRateReq -> {
+                            SqCalcFR sqCalcFR = new SqCalcFR();
+                            sqCalcFR.setFlowRate(flowRateReq.getFlowRate());
+                            sqCalcFR.setSqPump(sqPump);
+                            sqPump.getFlowRates().add(sqCalcFR);
+                        });
 
         SqPump updateSqPump = sqPumpRepository.save(sqPump);
 
@@ -83,15 +101,18 @@ public class SqPumpServiceImpl implements SqPumpService {
 
     @Override
     public SqPumpResponse getSqPump(Long id) {
-        SqPump sqPump = sqPumpRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotExistsException("Sq Pump not exists"));
+        SqPump sqPump =
+                sqPumpRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotExistsException(SQ_PUMP_NOT_EXIST));
         return sqPumpMapper.entityToRes(sqPump);
     }
 
     @Override
     public String deleteSqPump(Long id) {
-        SqPump sqPump = sqPumpRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotExistsException("Sq Pump not exists"));
+        sqPumpRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotExistsException(SQ_PUMP_NOT_EXIST));
 
         sqPumpRepository.deleteById(id);
         return "Delete pump successfully";

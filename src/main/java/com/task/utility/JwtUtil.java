@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY = "abcdefghijklmnopqrstuvxyz1234567890";
+    private static final String SECRET_KEY = "abcdefghijklmnopqrstuvxyz1234567890";
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
     public String generateToken(String username) {

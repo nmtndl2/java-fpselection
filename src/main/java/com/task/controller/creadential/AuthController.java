@@ -5,29 +5,28 @@ import com.task.entities.credential.Users;
 import com.task.service.creadential.impl.AuthServiceImpl;
 import com.task.utility.JwtUtil;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private AuthServiceImpl authService;
+    private final AuthServiceImpl authService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<String>  Register(@Valid @RequestBody UserRequestDTO userDto) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRequestDTO userDto) {
         Users registeredUser = authService.register(userDto);
-        return ResponseEntity.ok("User registered successfully with email : " + registeredUser.getEmail() ) ;
+        return ResponseEntity.ok("User registered successfully with email : " + registeredUser.getEmail());
     }
 
     @PostMapping("/login")
-    public String Login(@RequestBody Users users) {
+    public String authenticateUser(@RequestBody Users users) {
         authService.login(users);
-        return  jwtUtil.generateToken(users.getEmail());
+        return jwtUtil.generateToken(users.getEmail());
     }
 }

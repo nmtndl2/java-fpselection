@@ -2,7 +2,6 @@ package com.task.service.product;
 
 import com.task.dto.productRequest.FeedPumpRequest;
 import com.task.dto.response.FeedPumpResponse;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

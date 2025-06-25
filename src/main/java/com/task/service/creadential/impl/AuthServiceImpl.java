@@ -3,41 +3,34 @@ package com.task.service.creadential.impl;
 import com.task.dto.credentialDto.UserRequestDTO;
 import com.task.entities.credential.Role;
 import com.task.entities.credential.Users;
-import com.task.exception.AlreadyExistsException;
 import com.task.exception.UserAlreadyExistsException;
 import com.task.repository.credential.RoleRepository;
 import com.task.repository.credential.UsersRepository;
 import com.task.service.creadential.AuthService;
 import com.task.utility.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtUtil jwtService;
+    private final JwtUtil jwtService;
 
     @Override
     public Users register(UserRequestDTO usersDto) {
@@ -54,10 +47,6 @@ public class AuthServiceImpl implements AuthService {
                         .orElseThrow(() -> new RuntimeException("Role not found: " + roleName)))
                 .collect(Collectors.toSet());
 
-//        Set<Role> roles = new HashSet<>();
-//        Role defaultRole = roleRepository.findByRole("ROLE_USER")
-//                .orElseThrow(() -> new RuntimeException("Default role ROLE_USER not found"));
-//        roles.add(defaultRole);
         users.setRoles(roles);
 
         return usersRepository.save(users);

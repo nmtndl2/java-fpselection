@@ -1,7 +1,6 @@
 package com.task.entities.product;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity

@@ -2,7 +2,6 @@ package com.task.controller.input;
 
 import com.task.dto.inputRequest.InputRequest;
 import com.task.dto.outputResponse.DashboardResponse;
-import com.task.dto.outputResponse.PressDataResponse;
 import com.task.service.outputService.InputService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/input")
 @RequiredArgsConstructor
-public class inputController {
+public class InputController {
 
     private final InputService inputService;
 

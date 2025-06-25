@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PlateServiceImpl implements PlateService {
+
+    private static final String PLATE_TYPE_NOT_FOUND = "Plate type not found";
 
     private final PlateRepository plateRepository;
     private final PlateTypeRepository plateTypeRepository;
@@ -28,11 +28,12 @@ public class PlateServiceImpl implements PlateService {
     @Override
     public PlateResponse addPlate(PlateRequest plateRequest) {
 
-        if(!plateTypeRepository.existsByTypeName(plateRequest.getPlateType())) {
-            throw new ResourceNotExistsException("Plate type not found");
+        if (!plateTypeRepository.existsByTypeName(plateRequest.getPlateType())) {
+            throw new ResourceNotExistsException(PLATE_TYPE_NOT_FOUND);
         }
 
-        if(plateRepository.existsByPressSizeAndPlateType(plateRequest.getPressSize(), plateRequest.getPlateType())){
+        if (plateRepository.existsByPressSizeAndPlateType(
+                plateRequest.getPressSize(), plateRequest.getPlateType())) {
             throw new AlreadyExistsException("Plate already exists for this press size and type");
         }
 
@@ -43,15 +44,33 @@ public class PlateServiceImpl implements PlateService {
     @Override
     public PlateResponse updatePlate(Long plateId, PlateRequest plateRequest) {
 
-        Plate plate = plateRepository.findById(plateId)
-                .orElseThrow(() -> new ResourceNotExistsException("Plate type not found"));
+        Plate plate =
+                plateRepository
+                        .findById(plateId)
+                        .orElseThrow(() -> new ResourceNotExistsException(PLATE_TYPE_NOT_FOUND));
 
-        plate.setPressSize((plateRequest.getPressSize() == null) ? plate.getPressSize() : plateRequest.getPressSize());
-        plate.setPlateType((plateRequest.getPlateType() == null) ? plate.getPlateType() : plateRequest.getPlateType());
-        plate.setVolume((plateRequest.getVolume() == null) ? plate.getVolume() : plateRequest.getVolume());
-        plate.setFiltrationArea((plateRequest.getFiltrationArea() == null) ? plate.getFiltrationArea() : plateRequest.getFiltrationArea());
-        plate.setCakeThk((plateRequest.getCakeThk() == null) ? plate.getCakeThk() : plateRequest.getCakeThk());
-        plate.setFinalCakeThk((plateRequest.getFinalCakeThk() == null) ? plate.getFinalCakeThk() : plateRequest.getFinalCakeThk());
+        plate.setPressSize(
+                (plateRequest.getPressSize() == null)
+                        ? plate.getPressSize()
+                        : plateRequest.getPressSize());
+        plate.setPlateType(
+                (plateRequest.getPlateType() == null)
+                        ? plate.getPlateType()
+                        : plateRequest.getPlateType());
+        plate.setVolume(
+                (plateRequest.getVolume() == null) ? plate.getVolume() : plateRequest.getVolume());
+        plate.setFiltrationArea(
+                (plateRequest.getFiltrationArea() == null)
+                        ? plate.getFiltrationArea()
+                        : plateRequest.getFiltrationArea());
+        plate.setCakeThk(
+                (plateRequest.getCakeThk() == null)
+                        ? plate.getCakeThk()
+                        : plateRequest.getCakeThk());
+        plate.setFinalCakeThk(
+                (plateRequest.getFinalCakeThk() == null)
+                        ? plate.getFinalCakeThk()
+                        : plateRequest.getFinalCakeThk());
 
         Plate updatePlate = plateRepository.save(plate);
 
@@ -72,8 +91,10 @@ public class PlateServiceImpl implements PlateService {
     @Override
     public PlateResponse getById(Long plateId) {
 
-        Plate plate = plateRepository.findById(plateId)
-                .orElseThrow(() -> new ResourceNotExistsException("Plate type not found"));
+        Plate plate =
+                plateRepository
+                        .findById(plateId)
+                        .orElseThrow(() -> new ResourceNotExistsException(PLATE_TYPE_NOT_FOUND));
 
         return plateMapper.entityToResp(plateRepository.save(plate));
     }
@@ -81,8 +102,9 @@ public class PlateServiceImpl implements PlateService {
     @Override
     public String deleteById(Long plateId) {
 
-        Plate plate = plateRepository.findById(plateId)
-                .orElseThrow(() -> new ResourceNotExistsException("Plate type not found"));
+        plateRepository
+                .findById(plateId)
+                .orElseThrow(() -> new ResourceNotExistsException(PLATE_TYPE_NOT_FOUND));
 
         plateRepository.deleteById(plateId);
 
@@ -118,6 +140,4 @@ public class PlateServiceImpl implements PlateService {
             return Integer.MAX_VALUE;
         }
     }
-
-
 }

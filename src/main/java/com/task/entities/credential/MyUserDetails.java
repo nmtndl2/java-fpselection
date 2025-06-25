@@ -11,14 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyUserDetails implements UserDetails {
 
-//    @Autowired
-//    private Users users;
-
-    private final Users users;
-
-//    public MyUserDetails(Users users) {
-//        this.users = users;
-//    }
+    private transient final Users users;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
