@@ -1,6 +1,6 @@
 package com.task.controller.product;
 
-import com.task.dto.productRequest.PlateRequest;
+import com.task.dto.product.request.PlateRequest;
 import com.task.dto.response.PlateResponse;
 import com.task.service.product.PlateService;
 import jakarta.validation.Valid;

@@ -1,6 +1,6 @@
 package com.task.controller.product;
 
-import com.task.dto.productRequest.SqPumpRequest;
+import com.task.dto.product.request.SqPumpRequest;
 import com.task.dto.response.SqPumpResponse;
 import com.task.entities.product.SqPump;
 import com.task.service.product.SqPumpService;

@@ -1,6 +1,6 @@
 package com.task.controller.creadential;
 
-import com.task.dto.credentialDto.UserRequestDTO;
+import com.task.dto.credential.dto.UserRequestDTO;
 import com.task.entities.credential.Users;
 import com.task.service.creadential.impl.AuthServiceImpl;
 import com.task.utility.JwtUtil;

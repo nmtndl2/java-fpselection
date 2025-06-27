@@ -1,6 +1,6 @@
 package com.task.service.product.impl;
 
-import com.task.dto.productRequest.PressRequest;
+import com.task.dto.product.request.PressRequest;
 import com.task.dto.response.PressResponse;
 import com.task.entities.product.Press;
 import com.task.exception.BadRequestException;
@@ -175,5 +175,18 @@ public class PressServiceImpl implements PressService {
     public int roundUpToEven(double value) {
         int ceil = (int) Math.ceil(value);
         return (ceil % 2 == 0) ? ceil : ceil + 1;
+    }
+
+    public int cwWaterUse(String pressSize) {
+
+        Press press = pressRepository.findByPressSize(pressSize);
+        long pumpOnSeconds =
+                (long) press.getCwFwdT().toSecondOfDay()
+                        + press.getCwFwdDT().toSecondOfDay()
+                        + press.getCwRevT().toSecondOfDay();
+
+        double flowRateLitersPerSecond = ((press.getCwFlowRate() / 1.5) * 1000.0) / 3600.0;
+
+        return (int)(flowRateLitersPerSecond * pumpOnSeconds);
     }
 }

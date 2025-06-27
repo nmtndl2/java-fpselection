@@ -1,6 +1,6 @@
 package com.task.controller.product;
 
-import com.task.dto.productRequest.PressRequest;
+import com.task.dto.product.request.PressRequest;
 import com.task.dto.response.PressResponse;
 import com.task.service.product.PressService;
 import jakarta.validation.Valid;

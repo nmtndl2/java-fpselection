@@ -1,6 +1,6 @@
 package com.task.service.product.impl;
 
-import com.task.dto.productRequest.SqPumpRequest;
+import com.task.dto.product.request.SqPumpRequest;
 import com.task.dto.response.SqPumpResponse;
 import com.task.entities.product.SqCalcFR;
 import com.task.entities.product.SqPump;
@@ -80,8 +80,6 @@ public class SqPumpServiceImpl implements SqPumpService {
                         ? sqPump.getSqMaxTMin()
                         : sqPumpRequest.getSqMaxTMin());
 
-        if (sqPumpRequest.getFlowRates() != null) {}
-
         sqPump.getFlowRates().clear();
 
         sqPumpRequest
@@ -117,4 +115,31 @@ public class SqPumpServiceImpl implements SqPumpService {
         sqPumpRepository.deleteById(id);
         return "Delete pump successfully";
     }
+
+    public int calculateSqInletWater(String pressSize) {
+        return sqPumpRepository.findByPressSize(pressSize).getSqInletWater();
+    }
+
+    public Double calculateSqFlowRate(String pressSize, int sqWaterUsed) {
+        SqPump sqPump = sqPumpRepository.findByPressSize(pressSize);
+
+        if (sqPump.getFlowRates() == null || sqPump.getFlowRates().isEmpty()) {
+            return null;
+        }
+
+        List<Double> flowRates = sqPump.getFlowRates()
+                .stream()
+                .map(SqCalcFR::getFlowRate)
+                .sorted()
+                .toList();
+
+        for (Double rate : flowRates) {
+            if ((sqWaterUsed / (rate * 1000 / 60)) <= sqPump.getSqMaxTMin()) {
+                return rate;
+            }
+        }
+
+        return null;
+    }
+
 }

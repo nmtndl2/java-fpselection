@@ -1,6 +1,6 @@
 package com.task.mapper;
 
-import com.task.dto.productRequest.FeedPumpRequest;
+import com.task.dto.product.request.FeedPumpRequest;
 import com.task.dto.response.FeedPumpResponse;
 import com.task.entities.product.FeedPump;
 import org.mapstruct.Mapper;

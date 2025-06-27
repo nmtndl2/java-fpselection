@@ -1,6 +1,6 @@
 package com.task.service.creadential.impl;
 
-import com.task.dto.credentialDto.UserRequestDTO;
+import com.task.dto.credential.dto.UserRequestDTO;
 import com.task.entities.credential.Role;
 import com.task.entities.credential.Users;
 import com.task.exception.UserAlreadyExistsException;

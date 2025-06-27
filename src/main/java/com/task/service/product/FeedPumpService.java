@@ -1,6 +1,6 @@
 package com.task.service.product;
 
-import com.task.dto.productRequest.FeedPumpRequest;
+import com.task.dto.product.request.FeedPumpRequest;
 import com.task.dto.response.FeedPumpResponse;
 
 import java.util.List;

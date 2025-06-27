@@ -1,4 +1,4 @@
-package com.task.dto.productRequest;
+package com.task.dto.product.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

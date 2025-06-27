@@ -1,6 +1,6 @@
 package com.task.controller.product;
 
-import com.task.dto.productRequest.FeedPumpRequest;
+import com.task.dto.product.request.FeedPumpRequest;
 import com.task.dto.response.FeedPumpResponse;
 import com.task.repository.product.FeedPumpRepository;
 import com.task.service.product.FeedPumpService;

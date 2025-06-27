@@ -1,6 +1,6 @@
 package com.task.service.product.impl;
 
-import com.task.dto.productRequest.FeedPumpRequest;
+import com.task.dto.product.request.FeedPumpRequest;
 import com.task.dto.response.FeedPumpResponse;
 import com.task.entities.product.ChamberRange;
 import com.task.entities.product.FeedPump;
@@ -160,18 +160,8 @@ public class FeedPumpServiceImpl implements FeedPumpService {
         }
     }
 
-    public int calculateFeedPump (String pressSize, int noOfChamber, int getMaxChamber, int customFlowRate) {
-        int feedPumpFlow;
-        if (noOfChamber < getMaxChamber) {
-            feedPumpFlow =
-                    (customFlowRate > 0)
-                            ? getFlowRateByChamberCount(pressSize, noOfChamber)
-                            : customFlowRate;
-        } else {
-            feedPumpFlow = 1;
-        }
-
-        return feedPumpFlow;
+    public Integer calculateFeedPump (String pressSize, int noOfChamber) {
+        return getFlowRateByChamberCount(pressSize, noOfChamber);
     }
 
     public int getFlowRateByChamberCount(String pressSize, int noOfChamber) {

@@ -1,7 +1,7 @@
 package com.task.validation;
 
 import com.task.annotation.ValidatePressRequestFields;
-import com.task.dto.productRequest.PressRequest;
+import com.task.dto.product.request.PressRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
