@@ -1,7 +1,7 @@
 package com.task.mapper;
 
-import com.task.dto.productRequest.SqCalcFRRequest;
-import com.task.dto.productRequest.SqPumpRequest;
+import com.task.dto.product.request.SqCalcFRRequest;
+import com.task.dto.product.request.SqPumpRequest;
 import com.task.dto.response.SqPumpResponse;
 import com.task.entities.product.SqCalcFR;
 import com.task.entities.product.SqPump;

@@ -1,6 +1,6 @@
 package com.task.controller.product;
 
-import com.task.dto.productRequest.PlateTypeRequest;
+import com.task.dto.product.request.PlateTypeRequest;
 import com.task.dto.response.PlateTypeResponse;
 import com.task.entities.product.PlateType;
 import com.task.repository.product.PlateTypeRepository;

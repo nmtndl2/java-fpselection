@@ -1,4 +1,4 @@
-package com.task.dto.inputRequest;
+package com.task.dto.input.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

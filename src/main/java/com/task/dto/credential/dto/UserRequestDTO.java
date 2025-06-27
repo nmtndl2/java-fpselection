@@ -1,4 +1,4 @@
-package com.task.dto.credentialDto;
+package com.task.dto.credential.dto;
 
 
 import jakarta.validation.constraints.Email;

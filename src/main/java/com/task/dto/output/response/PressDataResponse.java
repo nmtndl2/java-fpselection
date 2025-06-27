@@ -1,4 +1,4 @@
-package com.task.dto.outputResponse;
+package com.task.dto.output.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

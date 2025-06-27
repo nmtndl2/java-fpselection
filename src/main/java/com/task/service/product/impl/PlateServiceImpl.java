@@ -1,6 +1,6 @@
 package com.task.service.product.impl;
 
-import com.task.dto.productRequest.PlateRequest;
+import com.task.dto.product.request.PlateRequest;
 import com.task.dto.response.PlateResponse;
 import com.task.entities.product.Plate;
 import com.task.exception.AlreadyExistsException;

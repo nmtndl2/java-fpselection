@@ -1,6 +1,6 @@
 package com.task.service.product;
 
-import com.task.dto.productRequest.PressRequest;
+import com.task.dto.product.request.PressRequest;
 import com.task.dto.response.PressResponse;
 
 import java.util.List;

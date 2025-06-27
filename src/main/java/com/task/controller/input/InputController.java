@@ -1,8 +1,8 @@
 package com.task.controller.input;
 
-import com.task.dto.inputRequest.InputRequest;
-import com.task.dto.outputResponse.DashboardResponse;
-import com.task.service.outputService.InputService;
+import com.task.dto.input.request.InputRequest;
+import com.task.dto.output.response.DashboardResponse;
+import com.task.service.output.service.InputService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
