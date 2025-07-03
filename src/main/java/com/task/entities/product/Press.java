@@ -22,7 +22,7 @@ public class Press {
     private long pressId;
 
     private String pressSize;
-    private int maxChamber;
+    private int  maxChamber;
 
     private LocalTime cakeAirT;
     private LocalTime cyFwdT;

@@ -1,5 +1,6 @@
 package com.task.service.product.impl;
 
+import com.task.dto.output.response.PressDataResponse;
 import com.task.dto.product.request.FeedPumpRequest;
 import com.task.dto.response.FeedPumpResponse;
 import com.task.entities.product.ChamberRange;
@@ -15,6 +16,8 @@ import com.task.service.product.FeedPumpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -160,8 +163,10 @@ public class FeedPumpServiceImpl implements FeedPumpService {
         }
     }
 
-    public Integer calculateFeedPump (String pressSize, int noOfChamber) {
-        return getFlowRateByChamberCount(pressSize, noOfChamber);
+    public Integer calculateFeedPump(String pressSize, int noOfChamber, Integer customFeedRate) {
+        return (customFeedRate != null && customFeedRate != 0)
+                ? customFeedRate
+                : getFlowRateByChamberCount(pressSize, noOfChamber);
     }
 
     public int getFlowRateByChamberCount(String pressSize, int noOfChamber) {
@@ -186,4 +191,14 @@ public class FeedPumpServiceImpl implements FeedPumpService {
         throw new ChamberRangeNotFoundException(
                 "No matching flow rate found for chamber count: " + noOfChamber);
     }
+
+    public LocalTime calculateFeedTime(PressDataResponse pressData, double sludgeQty) {
+        int effectiveFlow = pressData.getFeedPumpFlow();
+        long feedTimeSeconds = Math.round(
+                (sludgeQty * 3600.0) / (pressData.getNoOfPress() * pressData.getNoOfBatch() * effectiveFlow)
+        );
+
+        return LocalTime.MIDNIGHT.plusSeconds(feedTimeSeconds);
+    }
+
 }

@@ -50,4 +50,6 @@ public class InputRequest {
 
     private boolean cakeWashing;
     private boolean clothWashing;
+    private boolean plateShifter;
+    private boolean dripTray;
 }

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.List;
 
 @Slf4j
@@ -187,6 +189,26 @@ public class PressServiceImpl implements PressService {
 
         double flowRateLitersPerSecond = ((press.getCwFlowRate() / 1.5) * 1000.0) / 3600.0;
 
-        return (int)(flowRateLitersPerSecond * pumpOnSeconds);
+        return (int) (flowRateLitersPerSecond * pumpOnSeconds);
+    }
+
+    public int calculateDtCTime(String pressSize, boolean dripTray) {
+        if (dripTray) {
+            return pressRepository.findByPressSize(pressSize).getDtClosedT().toSecondOfDay();
+        }
+        return 0;
+    }
+
+    public int calculateDtOTime(String pressSize, boolean dripTray) {
+        if (dripTray) {
+            return pressRepository.findByPressSize(pressSize).getDtClosedT().toSecondOfDay();
+        }
+        return 0;
+    }
+
+    public LocalTime calculatePressingTime(String pressSize, int dtCloseDT) {
+        Press press = pressRepository.findByPressSize(pressSize);
+        int totalSeconds = dtCloseDT + press.getCyFwdT().toSecondOfDay();
+        return LocalTime.MIDNIGHT.plusSeconds(totalSeconds);
     }
 }

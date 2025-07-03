@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,8 @@ public class InputServiceImpl implements InputService {
     private static final double AIR_COMPRESS_DIVISOR = 28.28;
     private static final LocalTime SQ_OUTLET_DEFAULT_TIME = LocalTime.parse("00:20:00");
     private static final String MEMBRANE_PLATE_TYPE = "Membrane";
+    private static final int DEFAULT_PRESS = 1;
+    private static final int DEFAULT_BATCH = 1;
 
     @Override
     @Transactional
@@ -65,6 +68,9 @@ public class InputServiceImpl implements InputService {
             PressDataResponse pressData =
                     buildPressDataResponse(inputRequest, press, plate, slurryResponse, plateType);
             responseList.add(pressData);
+
+            PressTResponse pressDataTime = buildPressDataTime(inputRequest, press, pressData);
+            pressTResponses.add(pressDataTime);
         }
 
         DashboardResponse dashboardResponse = new DashboardResponse();
@@ -107,9 +113,9 @@ public class InputServiceImpl implements InputService {
         int drySolid =
                 (int)
                         ((inputRequest.getSludgeQty()
-                                * 1000
-                                * inputRequest.getDrySolidParticle()
-                                / 100)
+                                        * 1000
+                                        * inputRequest.getDrySolidParticle()
+                                        / 100)
                                 / density);
         int wetCake = (int) (drySolid * (100 / (100 - inputRequest.getMoistureContain())));
 
@@ -126,8 +132,10 @@ public class InputServiceImpl implements InputService {
             SlurryResponse slurryResponse,
             String plateType) {
         int onePlateVolume = plate.getVolume();
-        int noOfPress = (inputRequest.getNoOfPress() == 0) ? 1 : inputRequest.getNoOfPress();
-        int noOfBatch = (inputRequest.getNoOfBatch() == 0) ? 1 : inputRequest.getNoOfBatch();
+        int noOfPress =
+                (inputRequest.getNoOfPress() == 0) ? DEFAULT_PRESS : inputRequest.getNoOfPress();
+        int noOfBatch =
+                (inputRequest.getNoOfBatch() == 0) ? DEFAULT_BATCH : inputRequest.getNoOfBatch();
         int totalBatch = noOfPress * noOfBatch;
         int noOfChamber =
                 pressService.calculateChamber(
@@ -146,16 +154,14 @@ public class InputServiceImpl implements InputService {
         Integer cw1CWaterUsed = null;
         Integer cwTankCap = null;
 
-        boolean isValidChamber = noOfChamber > getMaxChamber;
+        boolean isValidChamber = noOfChamber <= getMaxChamber;
         boolean isMembrane = MEMBRANE_PLATE_TYPE.equalsIgnoreCase(plateType);
         boolean isClothWashing = inputRequest.isClothWashing();
 
         if (isValidChamber) {
-            // Calculate feed pump flow rate
             feedPumpFlow =
-                    inputRequest.getCusFeedRate() != null
-                            ? inputRequest.getCusFeedRate()
-                            : feedPumpService.calculateFeedPump(press.getPressSize(), noOfChamber);
+                    feedPumpService.calculateFeedPump(
+                            press.getPressSize(), noOfChamber, inputRequest.getCusFeedRate());
 
             airCompressDeli = (int) Math.ceil(totalVolume / AIR_COMPRESS_DIVISOR);
 
@@ -204,8 +210,168 @@ public class InputServiceImpl implements InputService {
         return pressData;
     }
 
-    private void handleExceededChamberLimit(int noOfChamber, int maxChamber, PressDataResponse pressData) {
-        String msg = String.format("Calculated chambers (%d) exceed max (%d).", noOfChamber, maxChamber);
+    private PressTResponse buildPressDataTime(
+            InputRequest inputRequest, Press press, PressDataResponse pressData) {
+        // Pressing Cycle Time (Duration)
+        boolean isValidChamber = pressData.getNoOfChamber() <= press.getMaxChamber();
+
+        String plateType = pressData.getPlateType();
+        String pressSize = pressData.getPressSize();
+
+        PressTResponse pressTimeResponse = new PressTResponse();
+
+        if (isValidChamber) {
+
+            int dtCloseDT = pressService.calculateDtCTime(pressSize, inputRequest.isDripTray());
+            int dtOpenDT = pressService.calculateDtOTime(pressSize, inputRequest.isDripTray());
+
+            LocalTime pressingT = pressService.calculatePressingTime(pressSize, dtCloseDT);
+
+            // Feed Time (Duration)
+            LocalTime feedT = feedPumpService.calculateFeedTime(pressData, inputRequest.getSludgeQty());
+
+            // Cake Washing Time (Duration)
+            LocalTime cakeWT = (inputRequest.isCakeWashing()) ? inputRequest.getWashingT() : null;
+
+            // Air Time (Duration)
+            LocalTime cakeAirT = press.getCakeAirT();
+
+            // Squeezing Time (Duration)
+            Duration sqInletTime;
+            LocalTime sqInletT;
+            LocalTime sqOutletT;
+            if ("Membrane".equalsIgnoreCase(plateType)) {
+                long sqInletTimeSecond =
+                        (pressData.getSqFlowRate() != 0)
+                                ? (long)
+                                        ((pressData.getSqWaterUsed())
+                                                / (pressData.getSqFlowRate() * 1000 / 3600))
+                                : 0;
+                sqInletTime = Duration.ofSeconds(sqInletTimeSecond);
+                sqInletT = LocalTime.MIDNIGHT.plus(sqInletTime);
+
+                sqOutletT =
+                        (inputRequest.getSqOutletT() == null)
+                                ? SQ_OUTLET_DEFAULT_TIME
+                                : inputRequest.getSqOutletT();
+            } else {
+                sqInletT = null;
+                sqOutletT = null;
+            }
+
+            LocalTime onePlatePsT;
+            LocalTime onCyclePsT;
+            if (press.getPsAvailable()) {
+                // Plate Shifter Time (Duration)
+                long onePlatePsTimeSecond =
+                        press.getPsFwdT().toSecondOfDay()
+                                + press.getPsFwdDT().toSecondOfDay()
+                                + press.getPsRevT().toSecondOfDay()
+                                + press.getPsRevDT().toSecondOfDay();
+                Duration onePlatePsTime = Duration.ofSeconds(onePlatePsTimeSecond);
+                onePlatePsT = LocalTime.MIDNIGHT.plus(onePlatePsTime);
+
+                long onCyclePsTimeSecond =
+                        (press.getCyRevT().toSecondOfDay()
+                                        + dtOpenDT
+                                        + (long) onePlatePsT.toSecondOfDay()
+                                                * pressData.getNoOfChamber())
+                                + ((long) press.getPsFwdT().toSecondOfDay()
+                                        * (pressData.getNoOfChamber() + 2));
+                Duration onCyclePsTime = Duration.ofSeconds(onCyclePsTimeSecond);
+                onCyclePsT = LocalTime.MIDNIGHT.plus(onCyclePsTime);
+            } else {
+                onePlatePsT = null;
+                onCyclePsT = null;
+            }
+
+            LocalTime onePlateCwT;
+            LocalTime onCycleCwT;
+            if (press.getCwAvailable()) {
+
+                // ClothWashing Time (Duration)
+                long onePlateCwTimeSecond =
+                        press.getPsFwdT().toSecondOfDay()
+                                + press.getPsFwdDT().toSecondOfDay()
+                                + (press.getPsRevT().toSecondOfDay() / 2)
+                                + press.getPsRevDT().toSecondOfDay()
+                                + press.getCwDownT().toSecondOfDay()
+                                + press.getCwDownDT().toSecondOfDay()
+                                + press.getCwFwdT().toSecondOfDay()
+                                + press.getCwFwdDT().toSecondOfDay()
+                                + press.getCwRevT().toSecondOfDay()
+                                + press.getCwRevDT().toSecondOfDay()
+                                + press.getCwUpT().toSecondOfDay()
+                                + press.getCwUpDT().toSecondOfDay()
+                                + (press.getPsRevT().toSecondOfDay() / 2)
+                                + press.getPsRevDT().toSecondOfDay();
+                Duration onePlateCwTime = Duration.ofSeconds(onePlateCwTimeSecond);
+                onePlateCwT = LocalTime.MIDNIGHT.plus(onePlateCwTime);
+
+                long onCycleCwTimeSecond =
+                        press.getCyFwdT().toSecondOfDay()
+                                + press.getCyRevT().toSecondOfDay()
+                                + dtCloseDT
+                                + ((long) onePlateCwT.toSecondOfDay() * pressData.getNoOfChamber())
+                                + ((long) press.getPsFwdT().toSecondOfDay()
+                                        * (pressData.getNoOfChamber() + 2));
+                Duration onCycleCwTime = Duration.ofSeconds(onCycleCwTimeSecond);
+                onCycleCwT = LocalTime.MIDNIGHT.plus(onCycleCwTime);
+            } else {
+                onePlateCwT = null;
+                onCycleCwT = null;
+            }
+
+            pressTimeResponse.setPressingCT(pressingT);
+            pressTimeResponse.setFeedT(feedT);
+            pressTimeResponse.setCakeAirT(cakeAirT);
+            pressTimeResponse.setSqInletT(sqInletT);
+            pressTimeResponse.setSqOutletT(sqOutletT);
+            pressTimeResponse.setOnePlatePsT(onePlatePsT);
+            pressTimeResponse.setOnCyclePsT(onCyclePsT);
+            pressTimeResponse.setOnePlateCwT(onePlateCwT);
+            pressTimeResponse.setOnCycleCwT(onCycleCwT);
+            pressTimeResponse.setCakeWT(cakeWT);
+        }
+
+        if (pressData.getNoOfChamber() > press.getMaxChamber()) {
+            String msg =
+                    String.format(
+                            "Calculated number of chambers (%d) exceeds the press's maximum capacity (%d).",
+                            pressData.getNoOfChamber(), press.getMaxChamber());
+            pressTimeResponse.setMessage(msg);
+            pressTimeResponse.setPressingCT(null);
+            pressTimeResponse.setFeedT(null);
+            pressTimeResponse.setCakeAirT(null);
+            pressTimeResponse.setSqInletT(null);
+            pressTimeResponse.setSqOutletT(null);
+            pressTimeResponse.setOnePlatePsT(null);
+            pressTimeResponse.setOnCyclePsT(null);
+            pressTimeResponse.setOnePlateCwT(null);
+            pressTimeResponse.setOnCycleCwT(null);
+            pressTimeResponse.setCakeWT(null);
+        }
+
+        if ("Membrane".equalsIgnoreCase(plateType)) {
+            pressTimeResponse.setCakeAirT(null);
+        } else {
+            pressTimeResponse.setSqInletT(null);
+            pressTimeResponse.setSqOutletT(null);
+        }
+
+        if (!inputRequest.isClothWashing()) {
+            pressTimeResponse.setOnePlateCwT(null);
+            pressTimeResponse.setOnCycleCwT(null);
+            pressTimeResponse.setCakeWT(null);
+        }
+
+        return pressTimeResponse;
+    }
+
+    private void handleExceededChamberLimit(
+            int noOfChamber, int maxChamber, PressDataResponse pressData) {
+        String msg =
+                String.format("Calculated chambers (%d) exceed max (%d).", noOfChamber, maxChamber);
         log.warn(msg);
         pressData.setMessage(msg);
         pressData.setTotalVolume(null);
@@ -218,7 +384,6 @@ public class InputServiceImpl implements InputService {
         pressData.setCw1CWaterUsed(null);
         pressData.setCwTankCap(null);
     }
-
 
     public static int roundUpToNextHundred(int number) {
         return (number % 100 == 0) ? number : ((number + 99) / 100) * 100;

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class SqPump {
     private int sqMaxTMin;
 
     @OneToMany(mappedBy = "sqPump", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     @JsonManagedReference
     private List<SqCalcFR> flowRates = new ArrayList<>();
 }
