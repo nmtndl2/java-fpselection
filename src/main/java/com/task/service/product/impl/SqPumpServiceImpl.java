@@ -1,5 +1,6 @@
 package com.task.service.product.impl;
 
+import com.task.dto.output.response.PressDataResponse;
 import com.task.dto.product.request.SqPumpRequest;
 import com.task.dto.response.SqPumpResponse;
 import com.task.entities.product.SqCalcFR;
@@ -13,6 +14,7 @@ import com.task.service.product.SqPumpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -67,18 +69,10 @@ public class SqPumpServiceImpl implements SqPumpService {
                         .findById(id)
                         .orElseThrow(() -> new ResourceNotExistsException(SQ_PUMP_NOT_EXIST));
 
-        sqPump.setPressSize(
-                (sqPumpRequest.getPressSize() == null)
-                        ? sqPump.getPressSize()
-                        : sqPumpRequest.getPressSize());
+        sqPump.setPressSize(getOrDefault(sqPumpRequest.getPressSize(), sqPump.getPressSize()));
         sqPump.setSqInletWater(
-                (sqPumpRequest.getSqInletWater() == null)
-                        ? sqPump.getSqInletWater()
-                        : sqPumpRequest.getSqInletWater());
-        sqPump.setSqMaxTMin(
-                (sqPumpRequest.getSqMaxTMin() == null)
-                        ? sqPump.getSqMaxTMin()
-                        : sqPumpRequest.getSqMaxTMin());
+                getOrDefault(sqPumpRequest.getSqInletWater(), sqPump.getSqInletWater()));
+        sqPump.setSqMaxTMin(getOrDefault(sqPumpRequest.getSqMaxTMin(), sqPump.getSqMaxTMin()));
 
         sqPump.getFlowRates().clear();
 
@@ -127,11 +121,8 @@ public class SqPumpServiceImpl implements SqPumpService {
             return null;
         }
 
-        List<Double> flowRates = sqPump.getFlowRates()
-                .stream()
-                .map(SqCalcFR::getFlowRate)
-                .sorted()
-                .toList();
+        List<Double> flowRates =
+                sqPump.getFlowRates().stream().map(SqCalcFR::getFlowRate).sorted().toList();
 
         for (Double rate : flowRates) {
             if ((sqWaterUsed / (rate * 1000 / 60)) <= sqPump.getSqMaxTMin()) {
@@ -142,4 +133,13 @@ public class SqPumpServiceImpl implements SqPumpService {
         return null;
     }
 
+    public LocalTime calculateSqInletWaterTime(PressDataResponse pressData) {
+        double flowRateLitersPerSec = (pressData.getSqFlowRate() * 1000.0) / 3600.0;
+        return LocalTime.MIDNIGHT.plusSeconds(
+                Math.round(pressData.getSqWaterUsed() / flowRateLitersPerSec));
+    }
+
+    private <T> T getOrDefault(T newValue, T existingValue) {
+        return newValue != null ? newValue : existingValue;
+    }
 }
